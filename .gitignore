@@ -35,6 +35,7 @@
 *.i*86
 *.x86_64
 *.hex
+thread_pool
 
 # Debug files
 *.dSYM/
