@@ -15,4 +15,12 @@ struct job_scheduler{
     struct queue *queue;
 };
 
+struct job_scheduler *initialize_job_scheduler(int );
+void create_threads_job_scheduler();
+void barrier_job_scheduler();
+void free_job_scheduler();
+void stop_job_scheduler();
+void schedule_job_scheduler(void (*function)(void*), void *);
+void *thread_function(void *);
+
 #endif
