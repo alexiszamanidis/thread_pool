@@ -27,3 +27,48 @@ struct queue *initialize_queue() {
     
     return new_queue;
 }
+
+void push_queue(struct queue **queue, void (*function)(void*), void *argument) {
+    struct job *new_job = initialize_job(function,argument);
+
+    // if the queue is empty, fix head and tail
+    if( (*queue)->length == 0 ) {
+        (*queue)->head = new_job;
+        (*queue)->tail = new_job;
+    }
+    // otherwise fix only tail
+    else {
+        (*queue)->tail->next = new_job;
+        (*queue)->tail = new_job;
+    }
+    (*queue)->length++;
+}
+
+struct job *pop_queue(struct queue **queue){
+    struct job *temp_job = (*queue)->head;
+    // if the queue is empty, then there is not data to be removed
+    if( (*queue)->length == 0 ) {
+        printf("There is no data to be removed.\n");
+        return NULL;
+    }
+    // if the queue has only 1 data, fix head and tail
+    else if( (*queue)->length == 1 ) {
+        (*queue)->head = NULL;
+        (*queue)->tail = NULL;
+    }
+    // otherwise move only head
+    else
+        (*queue)->head = (*queue)->head->next;
+    (*queue)->length--;
+    return temp_job;
+}
+
+void free_queue(struct queue **queue) {
+    struct job *temp_job = NULL;
+    while((*queue)->head) {
+        temp_job = (*queue)->head->next;
+        free((*queue)->head);
+        (*queue)->head = temp_job;
+    }
+    free(*queue);
+}
