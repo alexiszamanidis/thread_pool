@@ -1,5 +1,6 @@
 #include "../header/job_scheduler.h"
 
+// initialized the job scheduler with the number of open threads
 struct job_scheduler *initialize_job_scheduler(int number_of_threads) {
     if( number_of_threads < 1) {
         printf("initialize_job_scheduler: %s\n",strerror(errno));
@@ -24,6 +25,7 @@ struct job_scheduler *initialize_job_scheduler(int number_of_threads) {
     return new_job_scheduler;
 }
 
+// creates all the threads in thread pool
 void create_threads_job_scheduler() {
     extern struct job_scheduler *job_scheduler;
 
@@ -31,6 +33,7 @@ void create_threads_job_scheduler() {
         pthread_create(&(job_scheduler->thread_pool[i]),0,thread_function,0);
 }
 
+// waits until executed all jobs in the queue
 void barrier_job_scheduler() {
     extern struct job_scheduler *job_scheduler;
 
@@ -40,6 +43,7 @@ void barrier_job_scheduler() {
     pthread_mutex_unlock(&job_scheduler->mutex);
 }
 
+// free all resources that are allocated by job scheduler
 void free_job_scheduler() {
     extern struct job_scheduler *job_scheduler;
 
@@ -51,6 +55,7 @@ void free_job_scheduler() {
     free(job_scheduler);
 }
 
+// waits until all threads finish their job and after that close all threads
 void stop_job_scheduler() {
     extern struct job_scheduler *job_scheduler;
 
@@ -60,6 +65,7 @@ void stop_job_scheduler() {
         pthread_join((job_scheduler)->thread_pool[i],0);
 }
 
+// adds a job in the queue
 void schedule_job_scheduler(void (*function)(void*), void *argument) {
     extern struct job_scheduler *job_scheduler;
 
@@ -70,6 +76,7 @@ void schedule_job_scheduler(void (*function)(void*), void *argument) {
     pthread_mutex_unlock(&job_scheduler->mutex);
 }
 
+// the new threads start execution by invoking this function
 void *thread_function(void *arguments) {
     extern struct job_scheduler *job_scheduler;
     struct job *job = NULL;
@@ -90,7 +97,7 @@ void *thread_function(void *arguments) {
 
             function = job->function;
             argument = job->argument;
-
+            // execute the function
             function(argument);
 
             free(job);

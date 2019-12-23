@@ -1,5 +1,6 @@
 #include "../header/queue.h"
 
+// initialized the job with a function and argument
 struct job *initialize_job(void (*function)(void*), void *argument) {
     struct job *new_job = (struct job *)malloc(sizeof(struct job));
     if( new_job == NULL) {
@@ -14,6 +15,7 @@ struct job *initialize_job(void (*function)(void*), void *argument) {
     return new_job;
 }
 
+// initialized the queue
 struct queue *initialize_queue() {
     struct queue *new_queue = (struct queue *)malloc(sizeof(struct queue));
     if( new_queue == NULL) {
@@ -28,6 +30,7 @@ struct queue *initialize_queue() {
     return new_queue;
 }
 
+// push a job in the queue
 void push_queue(struct queue **queue, void (*function)(void*), void *argument) {
     struct job *new_job = initialize_job(function,argument);
 
@@ -44,6 +47,7 @@ void push_queue(struct queue **queue, void (*function)(void*), void *argument) {
     (*queue)->length++;
 }
 
+// pop a job from the queue
 struct job *pop_queue(struct queue **queue){
     struct job *temp_job = (*queue)->head;
     // if the queue is empty, then there is not data to be removed
@@ -63,6 +67,7 @@ struct job *pop_queue(struct queue **queue){
     return temp_job;
 }
 
+// free all resources that are allocated by queue
 void free_queue(struct queue **queue) {
     struct job *temp_job = NULL;
     while((*queue)->head) {
