@@ -31,3 +31,10 @@ Job scheduler is a structure that manages the thread pool and the queue. Job sch
     void schedule_job_scheduler(void (*function)(void*), void *);
     void *thread_function(void *);
 ```
+
+### Execution Instructions
+
+* Compile: make
+* Execute demo: valgrind ./thread_pool
+* Clean: make clean
+
