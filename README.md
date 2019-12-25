@@ -2,6 +2,8 @@
 
 A thread pool is a group of threads initially created that waits for jobs and executes them. The idea is to have the threads always existing, so that we won't have to pay overhead time for creating them every time. Also, the thread pool keeps the system from becoming overloaded. It allows a limit to the number of threads and tasks are queued and only run when a thread is available.
 
+![thread_pool](https://user-images.githubusercontent.com/48658768/71448039-5d4d6e80-273f-11ea-9017-2e57e1b5971d.png)
+
 ## Queue
 
 Queue is a linear structure which follows a particular order in which the operations are performed. The order is First In First Out (FIFO). It holds the function to call and it's arguments. Βasically, it is used for the temporary storage of jobs.
