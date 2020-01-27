@@ -70,6 +70,10 @@ struct job *pop_queue(struct queue **queue){
 // free all resources that are allocated by queue
 void free_queue(struct queue **queue) {
     struct job *temp_job = NULL;
+
+    if( queue == NULL )
+        return;
+
     while((*queue)->head) {
         temp_job = (*queue)->head->next;
         free((*queue)->head);

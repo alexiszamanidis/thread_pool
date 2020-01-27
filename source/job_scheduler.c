@@ -47,6 +47,9 @@ void barrier_job_scheduler() {
 void free_job_scheduler() {
     extern struct job_scheduler *job_scheduler;
 
+    if( job_scheduler == NULL )
+        return;
+
     free((job_scheduler)->thread_pool);
     pthread_mutex_destroy(&(job_scheduler)->mutex);
     pthread_cond_destroy(&(job_scheduler)->empty);
