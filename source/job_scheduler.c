@@ -21,6 +21,7 @@ struct job_scheduler *initialize_job_scheduler(int number_of_threads) {
     pthread_cond_init(&new_job_scheduler->empty, NULL);
     pthread_cond_init(&new_job_scheduler->not_empty, NULL);
     new_job_scheduler->queue = initialize_queue();
+    create_threads_job_scheduler(new_job_scheduler);
 
     return new_job_scheduler;
 }

@@ -23,7 +23,6 @@ int main(void) {
     double time_spent;
 
     job_scheduler = initialize_job_scheduler(NUMBER_OF_THREADS);
-    create_threads_job_scheduler(job_scheduler);
 
     clock_gettime(CLOCK_MONOTONIC, &begin);
 
