@@ -81,3 +81,11 @@ void free_queue(struct queue **queue) {
     }
     free(*queue);
 }
+
+void free_job(struct job **job) {
+    if( job == NULL )
+        return;
+    if( (*job)->argument != NULL )
+        free((*job)->argument);
+    free(*job);
+}

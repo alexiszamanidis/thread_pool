@@ -79,12 +79,22 @@ void schedule_job_scheduler(void (*function)(void*), void *argument) {
     pthread_mutex_unlock(&job_scheduler->mutex);
 }
 
+void execute_job(struct job *job) {
+    void (*function)(void*);
+    void*  argument;
+
+    function = job->function;
+    argument = job->argument;
+    // execute the function
+    function(argument);
+
+    free_job(&job);
+}
+
 // the new threads start execution by invoking this function
 void *thread_function(void *arguments) {
     extern struct job_scheduler *job_scheduler;
     struct job *job = NULL;
-    void (*function)(void*);
-    void*  argument;
 
     while( true ) {
         pthread_mutex_lock(&job_scheduler->mutex);
@@ -98,12 +108,7 @@ void *thread_function(void *arguments) {
             job = pop_queue(&job_scheduler->queue);
             pthread_mutex_unlock(&job_scheduler->mutex);
 
-            function = job->function;
-            argument = job->argument;
-            // execute the function
-            function(argument);
-
-            free(job);
+            execute_job(job);
 
             pthread_mutex_lock(&job_scheduler->mutex);
             job_scheduler->jobs--;

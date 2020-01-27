@@ -21,6 +21,7 @@ void barrier_job_scheduler();
 void free_job_scheduler();
 void stop_job_scheduler();
 void schedule_job_scheduler(void (*function)(void*), void *);
+void execute_job(struct job *);
 void *thread_function(void *);
 
 #endif

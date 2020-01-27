@@ -12,7 +12,10 @@ struct test {
 void test_function(void *argument) {
     struct test *test = argument;
     printf("x=%d, y=%d\n", test->x, test->y);
-    free(test);
+}
+
+void test_function_2(void *argument) {
+    printf("no argument function\n");
 }
 
 int main(void) {
@@ -29,6 +32,7 @@ int main(void) {
         test->x = i;
         test->y = i;
         schedule_job_scheduler((void*)test_function,test);
+        schedule_job_scheduler((void*)test_function_2,NULL);
     }
 
     barrier_job_scheduler();
