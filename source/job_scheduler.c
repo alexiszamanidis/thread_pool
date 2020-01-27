@@ -26,17 +26,13 @@ struct job_scheduler *initialize_job_scheduler(int number_of_threads) {
 }
 
 // creates all the threads in thread pool
-void create_threads_job_scheduler() {
-    extern struct job_scheduler *job_scheduler;
-
+void create_threads_job_scheduler(struct job_scheduler *job_scheduler) {
     for( int i = 0 ; i < job_scheduler->number_of_threads ; i++ )
-        pthread_create(&(job_scheduler->thread_pool[i]),0,thread_function,0);
+        pthread_create(&(job_scheduler->thread_pool[i]),0,thread_function,(void *) job_scheduler);
 }
 
 // waits until executed all jobs in the queue
-void barrier_job_scheduler() {
-    extern struct job_scheduler *job_scheduler;
-
+void barrier_job_scheduler(struct job_scheduler *job_scheduler) {
     pthread_mutex_lock(&job_scheduler->mutex);
     while( job_scheduler->jobs > 0 )
         pthread_cond_wait(&job_scheduler->empty,&job_scheduler->mutex);
@@ -44,13 +40,12 @@ void barrier_job_scheduler() {
 }
 
 // free all resources that are allocated by job scheduler
-void free_job_scheduler() {
-    extern struct job_scheduler *job_scheduler;
-
+void free_job_scheduler(struct job_scheduler *job_scheduler) {
     if( job_scheduler == NULL )
         return;
+    if( (job_scheduler)->thread_pool != NULL )
+        free((job_scheduler)->thread_pool);
 
-    free((job_scheduler)->thread_pool);
     pthread_mutex_destroy(&(job_scheduler)->mutex);
     pthread_cond_destroy(&(job_scheduler)->empty);
     pthread_cond_destroy(&(job_scheduler)->not_empty);
@@ -59,9 +54,7 @@ void free_job_scheduler() {
 }
 
 // waits until all threads finish their job and after that close all threads
-void stop_job_scheduler() {
-    extern struct job_scheduler *job_scheduler;
-
+void stop_job_scheduler(struct job_scheduler *job_scheduler) {
     job_scheduler->stop = true;
     pthread_cond_broadcast(&job_scheduler->not_empty);
     for( int i = 0 ; i < (job_scheduler)->number_of_threads ; i++ )
@@ -69,9 +62,7 @@ void stop_job_scheduler() {
 }
 
 // adds a job in the queue
-void schedule_job_scheduler(void (*function)(void*), void *argument) {
-    extern struct job_scheduler *job_scheduler;
-
+void schedule_job_scheduler(struct job_scheduler *job_scheduler, void (*function)(void*), void *argument) {
     pthread_mutex_lock(&job_scheduler->mutex);
     push_queue(&job_scheduler->queue, function, argument);
     job_scheduler->jobs++;
@@ -79,6 +70,7 @@ void schedule_job_scheduler(void (*function)(void*), void *argument) {
     pthread_mutex_unlock(&job_scheduler->mutex);
 }
 
+// executes a popped job from the queue
 void execute_job(struct job *job) {
     void (*function)(void*);
     void*  argument;
@@ -92,8 +84,9 @@ void execute_job(struct job *job) {
 }
 
 // the new threads start execution by invoking this function
-void *thread_function(void *arguments) {
-    extern struct job_scheduler *job_scheduler;
+void *thread_function(void *job_scheduler_argument) {
+    struct job_scheduler *job_scheduler = job_scheduler_argument;
+
     struct job *job = NULL;
 
     while( true ) {

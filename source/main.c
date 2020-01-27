@@ -23,7 +23,7 @@ int main(void) {
     double time_spent;
 
     job_scheduler = initialize_job_scheduler(NUMBER_OF_THREADS);
-    create_threads_job_scheduler();
+    create_threads_job_scheduler(job_scheduler);
 
     clock_gettime(CLOCK_MONOTONIC, &begin);
 
@@ -31,19 +31,19 @@ int main(void) {
         struct test *test = (struct test *)malloc(sizeof(struct test));
         test->x = i;
         test->y = i;
-        schedule_job_scheduler((void*)test_function,test);
-        schedule_job_scheduler((void*)test_function_2,NULL);
+        schedule_job_scheduler(job_scheduler,(void*)test_function,test);
+        schedule_job_scheduler(job_scheduler,(void*)test_function_2,NULL);
     }
 
-    barrier_job_scheduler();
+    barrier_job_scheduler(job_scheduler);
 
     clock_gettime(CLOCK_MONOTONIC, &end);
     time_spent = (end.tv_sec - begin.tv_sec);
     time_spent = time_spent + (end.tv_nsec-begin.tv_nsec)/1000000000.0;
     printf("Execution time = %f\n",time_spent);
 
-    stop_job_scheduler();
-    free_job_scheduler();
+    stop_job_scheduler(job_scheduler);
+    free_job_scheduler(job_scheduler);
 
     return SUCCESS;
 }
