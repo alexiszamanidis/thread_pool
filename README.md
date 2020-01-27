@@ -15,6 +15,7 @@ Queue is a linear structure which follows a particular order in which the operat
     void push_queue(struct queue **, void (*function)(void*), void *);
     struct job *pop_queue(struct queue **);
     void free_queue(struct queue **);
+    void free_job(struct job **);
 ```
 
 ## Job scheduler
@@ -24,11 +25,12 @@ Job scheduler is a structure that manages the thread pool and the queue. Job sch
 ```c
     // Job scheduler functions
     struct job_scheduler *initialize_job_scheduler(int );
-    void create_threads_job_scheduler();
-    void barrier_job_scheduler();
-    void free_job_scheduler();
-    void stop_job_scheduler();
-    void schedule_job_scheduler(void (*function)(void*), void *);
+    void create_threads_job_scheduler(struct job_scheduler *);
+    void barrier_job_scheduler(struct job_scheduler *);
+    void free_job_scheduler(struct job_scheduler *);
+    void stop_job_scheduler(struct job_scheduler *);
+    void schedule_job_scheduler(struct job_scheduler *,void (*function)(void*), void *);
+    void execute_job(struct job *);
     void *thread_function(void *);
 ```
 
