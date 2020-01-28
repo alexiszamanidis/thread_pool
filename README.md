@@ -34,9 +34,17 @@ Job scheduler is a structure that manages the thread pool and the queue. Job sch
     void *thread_function(void *);
 ```
 
+### Installing & Updating
+
+```c
+    git clone https://github.com/ZamanidisAlexios/thread_pool.git
+    git pull
+```
+
 ### Execution Instructions
 
-* Compile: make
-* Execute demo: valgrind ./thread_pool
-* Clean: make clean
+```c
+    $ make
+    $ valgrind ./thread_pool
+```
 
