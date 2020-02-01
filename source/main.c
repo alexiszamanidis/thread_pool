@@ -21,7 +21,7 @@ void test_function_2(void *argument) {
 int main(void) {
     struct timespec begin, end;
     double time_spent;
-
+    int barrier = 0;
     job_scheduler = initialize_job_scheduler(NUMBER_OF_THREADS);
 
     clock_gettime(CLOCK_MONOTONIC, &begin);
@@ -30,11 +30,11 @@ int main(void) {
         struct test *test = (struct test *)malloc(sizeof(struct test));
         test->x = i;
         test->y = i;
-        schedule_job_scheduler(job_scheduler,(void*)test_function,test);
-        schedule_job_scheduler(job_scheduler,(void*)test_function_2,NULL);
+        schedule_job_scheduler(job_scheduler,(void*)test_function,test,&barrier);
+        schedule_job_scheduler(job_scheduler,(void*)test_function_2,NULL,&barrier);
     }
 
-    barrier_job_scheduler(job_scheduler);
+    dynamic_barrier_job_scheduler(job_scheduler,&barrier);
 
     clock_gettime(CLOCK_MONOTONIC, &end);
     time_spent = (end.tv_sec - begin.tv_sec);

@@ -40,6 +40,17 @@ void barrier_job_scheduler(struct job_scheduler *job_scheduler) {
     pthread_mutex_unlock(&job_scheduler->mutex);
 }
 
+// waits until executed all jobs from a specific barrier in the queue
+void dynamic_barrier_job_scheduler(struct job_scheduler *job_scheduler, int *barrier) {
+    while( (*barrier) != 0 ) {
+        pthread_mutex_lock(&job_scheduler->mutex);
+        if( job_scheduler->queue->length !=0 )
+            execute_job(job_scheduler);
+        else
+            pthread_mutex_unlock(&job_scheduler->mutex);
+    }
+}
+
 // free all resources that are allocated by job scheduler
 void free_job_scheduler(struct job_scheduler *job_scheduler) {
     if( job_scheduler == NULL )
@@ -63,32 +74,39 @@ void stop_job_scheduler(struct job_scheduler *job_scheduler) {
 }
 
 // adds a job in the queue
-void schedule_job_scheduler(struct job_scheduler *job_scheduler, void (*function)(void*), void *argument) {
+void schedule_job_scheduler(struct job_scheduler *job_scheduler, void (*function)(void*), void *argument, int *barrier) {
     pthread_mutex_lock(&job_scheduler->mutex);
-    push_queue(&job_scheduler->queue, function, argument);
+    push_queue(&job_scheduler->queue, function, argument, barrier);
     job_scheduler->jobs++;
     pthread_cond_signal(&job_scheduler->not_empty);
     pthread_mutex_unlock(&job_scheduler->mutex);
 }
 
-// executes a popped job from the queue
-void execute_job(struct job *job) {
+// pops a job from the queue and executes it
+void execute_job(struct job_scheduler *job_scheduler) {
+    struct job *job = NULL;
     void (*function)(void*);
     void*  argument;
+
+    job = pop_queue(&job_scheduler->queue);
+    pthread_mutex_unlock(&job_scheduler->mutex);
 
     function = job->function;
     argument = job->argument;
     // execute the function
     function(argument);
 
+    pthread_mutex_lock(&job_scheduler->mutex);
+    job_scheduler->jobs--;
+    if( job_scheduler->jobs == 0 )
+        pthread_cond_signal(&job_scheduler->empty);
     free_job(&job);
+    pthread_mutex_unlock(&job_scheduler->mutex);
 }
 
 // the new threads start execution by invoking this function
 void *thread_function(void *job_scheduler_argument) {
     struct job_scheduler *job_scheduler = job_scheduler_argument;
-
-    struct job *job = NULL;
 
     while( true ) {
         pthread_mutex_lock(&job_scheduler->mutex);
@@ -98,17 +116,7 @@ void *thread_function(void *job_scheduler_argument) {
             pthread_mutex_unlock(&job_scheduler->mutex);
             pthread_exit(0);
         }
-        else {
-            job = pop_queue(&job_scheduler->queue);
-            pthread_mutex_unlock(&job_scheduler->mutex);
-
-            execute_job(job);
-
-            pthread_mutex_lock(&job_scheduler->mutex);
-            job_scheduler->jobs--;
-            if( job_scheduler->jobs == 0 )
-                pthread_cond_signal(&job_scheduler->empty);
-            pthread_mutex_unlock(&job_scheduler->mutex);
-        }
+        else
+            execute_job(job_scheduler);
     }
 }

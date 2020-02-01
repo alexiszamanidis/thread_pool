@@ -1,15 +1,17 @@
 #include "../header/queue.h"
 
 // initialized the job with a function and argument
-struct job *initialize_job(void (*function)(void*), void *argument) {
+struct job *initialize_job(void (*function)(void*), void *argument, int *barrier) {
     struct job *new_job = (struct job *)malloc(sizeof(struct job));
     if( new_job == NULL) {
         printf("initialize_job: %s\n",strerror(errno));
         exit(FAILURE);
     }
 
+    (*barrier)++;
     new_job->function = function;
     new_job->argument = argument;
+    new_job->barrier = barrier;
     new_job->next = NULL;
     
     return new_job;
@@ -31,8 +33,8 @@ struct queue *initialize_queue() {
 }
 
 // push a job in the queue
-void push_queue(struct queue **queue, void (*function)(void*), void *argument) {
-    struct job *new_job = initialize_job(function,argument);
+void push_queue(struct queue **queue, void (*function)(void*), void *argument, int *barrier) {
+    struct job *new_job = initialize_job(function,argument,barrier);
 
     // if the queue is empty, fix head and tail
     if( (*queue)->length == 0 ) {
@@ -85,6 +87,7 @@ void free_queue(struct queue **queue) {
 void free_job(struct job **job) {
     if( job == NULL )
         return;
+    (*(*job)->barrier)--;
     if( (*job)->argument != NULL )
         free((*job)->argument);
     free(*job);
