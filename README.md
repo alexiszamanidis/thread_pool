@@ -33,6 +33,9 @@ Job scheduler is a structure that manages the thread pool and the queue. Job sch
     void schedule_job_scheduler(struct job_scheduler *,void (*function)(void*), void *, int *);
     void execute_job(struct job_scheduler *);
     void *thread_function(void *);
+    void hold_threads(const int , void *);
+    void pause_job_scheduler(struct job_scheduler *);
+    void resume_job_scheduler(struct job_scheduler *);
 ```
 
 ### Installing && Updating
@@ -45,6 +48,7 @@ Job scheduler is a structure that manages the thread pool and the queue. Job sch
 ### Execution instructions
 
 ```
+    $ cd source
     $ make
     $ valgrind ./thread_pool
 ```
