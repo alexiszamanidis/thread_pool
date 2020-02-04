@@ -1,6 +1,6 @@
 #include "../header/job_scheduler.h"
 
-// initialized the job scheduler with the number of open threads
+// initializes the job scheduler with the number of open threads
 struct job_scheduler *initialize_job_scheduler(int number_of_threads) {
     if( number_of_threads < 1) {
         printf("initialize_job_scheduler: %s\n",strerror(errno));
