@@ -8,6 +8,7 @@ struct job_scheduler{
     int number_of_threads;
     int jobs;
     bool stop;
+    bool pause;
     pthread_t *thread_pool;
     pthread_mutex_t mutex;
     pthread_cond_t empty;

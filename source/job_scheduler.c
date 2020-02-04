@@ -17,6 +17,7 @@ struct job_scheduler *initialize_job_scheduler(int number_of_threads) {
     new_job_scheduler->number_of_threads = number_of_threads;
     new_job_scheduler->jobs = 0;
     new_job_scheduler->stop = false;
+    new_job_scheduler->pause = false;
     pthread_mutex_init(&new_job_scheduler->mutex, NULL);
     pthread_cond_init(&new_job_scheduler->empty, NULL);
     pthread_cond_init(&new_job_scheduler->not_empty, NULL);
