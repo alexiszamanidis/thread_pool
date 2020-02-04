@@ -20,7 +20,7 @@ void test_function_2(void *argument) {
 
 int main(void) {
     struct timespec begin, end;
-    double time_spent;
+    double time;
     int barrier = 0;
     job_scheduler = initialize_job_scheduler(NUMBER_OF_THREADS);
 
@@ -41,9 +41,8 @@ int main(void) {
     dynamic_barrier_job_scheduler(job_scheduler,&barrier);
 
     clock_gettime(CLOCK_MONOTONIC, &end);
-    time_spent = (end.tv_sec - begin.tv_sec);
-    time_spent = time_spent + (end.tv_nsec-begin.tv_nsec)/1000000000.0;
-    printf("Execution time = %f\n",time_spent);
+    time_spent(time,begin,end);
+    printf("Execution time = %f\n",time);
 
     stop_job_scheduler(job_scheduler);
     free_job_scheduler(job_scheduler);

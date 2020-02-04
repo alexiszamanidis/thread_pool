@@ -125,8 +125,8 @@ void *thread_function(void *job_scheduler_argument) {
 
     if( job_scheduler == NULL )
         error_handler("thread_function");
-    signal(SIGUSR1, (void (*))hold_threads);
-    hold_threads(SIGUSR2, job_scheduler);                       // fake signal
+    signal(ORIGINAL_SIGNAL, (void (*))hold_threads);
+    hold_threads(FAKE_SIGNAL, job_scheduler);
 
     while( true ) {
         pthread_mutex_lock(&job_scheduler->queue_mutex);
@@ -148,7 +148,7 @@ void hold_threads(const int signal, void *job_scheduler_argument) {
         job_scheduler = job_scheduler_argument;
     if( job_scheduler == NULL )
         error_handler("hold_threads");
-    if( signal == SIGUSR1 ) {
+    if( signal == ORIGINAL_SIGNAL ) {
         pthread_mutex_lock(&job_scheduler->pause_mutex);
         while( job_scheduler->pause == true )
             pthread_cond_wait(&job_scheduler->resume,&job_scheduler->pause_mutex);
@@ -164,7 +164,7 @@ void pause_job_scheduler(struct job_scheduler *job_scheduler) {
     job_scheduler->pause = true;
     pthread_mutex_unlock(&job_scheduler->pause_mutex);
     for( int i = 0 ; i < job_scheduler->number_of_threads ; i++ )
-        pthread_kill(job_scheduler->thread_pool[i], SIGUSR1);
+        pthread_kill(job_scheduler->thread_pool[i], ORIGINAL_SIGNAL);
 }
 
 // resumes all threads in thread pool
