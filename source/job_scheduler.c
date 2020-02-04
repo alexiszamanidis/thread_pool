@@ -48,10 +48,9 @@ void barrier_job_scheduler(struct job_scheduler *job_scheduler) {
 void dynamic_barrier_job_scheduler(struct job_scheduler *job_scheduler, int *barrier) {
     if( job_scheduler == NULL )
         error_handler("dynamic_barrier_job_scheduler");
-    
     while( (*barrier) != 0 ) {
         pthread_mutex_lock(&job_scheduler->queue_mutex);
-        if( job_scheduler->queue->length !=0 )
+        if( job_scheduler->queue->length != 0 )
             execute_job(job_scheduler);
         else
             pthread_mutex_unlock(&job_scheduler->queue_mutex);
@@ -64,7 +63,6 @@ void free_job_scheduler(struct job_scheduler *job_scheduler) {
         return;
     if( job_scheduler->thread_pool != NULL )
         free(job_scheduler->thread_pool);
-
     pthread_mutex_destroy(&job_scheduler->queue_mutex);
     pthread_cond_destroy(&job_scheduler->queue_empty);
     pthread_cond_destroy(&job_scheduler->queue_not_empty);
