@@ -2,17 +2,13 @@
 
 // initializes the job scheduler with the number of open threads
 struct job_scheduler *initialize_job_scheduler(int number_of_threads) {
-    if( number_of_threads < 1) {
-        printf("initialize_job_scheduler: %s\n",strerror(errno));
-        exit(FAILURE);
-    }
+    if( number_of_threads < 1 )
+        error_handler("initialize_job_scheduler: number of threads should be greater than 0");
 
     struct job_scheduler *new_job_scheduler = (struct job_scheduler *)malloc(sizeof(struct job_scheduler));
     new_job_scheduler->thread_pool = malloc(sizeof(pthread_t)*number_of_threads);
-    if( new_job_scheduler->thread_pool == NULL) {
-        printf("initialize_job_scheduler: %s\n",strerror(errno));
-        exit(FAILURE);
-    }
+    if( new_job_scheduler->thread_pool == NULL )
+        error_handler("initialize_job_scheduler: malloc failed");
 
     new_job_scheduler->number_of_threads = number_of_threads;
     new_job_scheduler->jobs = 0;
@@ -29,12 +25,17 @@ struct job_scheduler *initialize_job_scheduler(int number_of_threads) {
 
 // creates all the threads in thread pool
 void create_threads_job_scheduler(struct job_scheduler *job_scheduler) {
+    if( job_scheduler == NULL )
+        error_handler("create_threads_job_scheduler");
     for( int i = 0 ; i < job_scheduler->number_of_threads ; i++ )
-        pthread_create(&(job_scheduler->thread_pool[i]),0,thread_function,(void *) job_scheduler);
+        if( pthread_create(&(job_scheduler->thread_pool[i]),0,thread_function,(void *) job_scheduler) != 0 )
+            error_handler("create_threads_job_scheduler: pthread_create failed");
 }
 
 // waits until executed all jobs in the queue
 void barrier_job_scheduler(struct job_scheduler *job_scheduler) {
+    if( job_scheduler == NULL )
+        error_handler("barrier_job_scheduler");
     pthread_mutex_lock(&job_scheduler->mutex);
     while( job_scheduler->jobs > 0 )
         pthread_cond_wait(&job_scheduler->empty,&job_scheduler->mutex);
@@ -43,6 +44,9 @@ void barrier_job_scheduler(struct job_scheduler *job_scheduler) {
 
 // waits until executed all jobs from a specific barrier in the queue
 void dynamic_barrier_job_scheduler(struct job_scheduler *job_scheduler, int *barrier) {
+    if( job_scheduler == NULL )
+        error_handler("dynamic_barrier_job_scheduler");
+    
     while( (*barrier) != 0 ) {
         pthread_mutex_lock(&job_scheduler->mutex);
         if( job_scheduler->queue->length !=0 )
@@ -68,6 +72,8 @@ void free_job_scheduler(struct job_scheduler *job_scheduler) {
 
 // waits until all threads finish their job and after that close all threads
 void stop_job_scheduler(struct job_scheduler *job_scheduler) {
+    if( job_scheduler == NULL )
+        error_handler("stop_job_scheduler");
     job_scheduler->stop = true;
     pthread_cond_broadcast(&job_scheduler->not_empty);
     for( int i = 0 ; i < (job_scheduler)->number_of_threads ; i++ )
@@ -76,6 +82,8 @@ void stop_job_scheduler(struct job_scheduler *job_scheduler) {
 
 // adds a job in the queue
 void schedule_job_scheduler(struct job_scheduler *job_scheduler, void (*function)(void*), void *argument, int *barrier) {
+    if( job_scheduler == NULL )
+        error_handler("schedule_job_scheduler");
     pthread_mutex_lock(&job_scheduler->mutex);
     push_queue(&job_scheduler->queue, function, argument, barrier);
     job_scheduler->jobs++;
@@ -86,8 +94,10 @@ void schedule_job_scheduler(struct job_scheduler *job_scheduler, void (*function
 // pops a job from the queue and executes it
 void execute_job(struct job_scheduler *job_scheduler) {
     struct job *job = NULL;
-    void (*function)(void*);
-    void*  argument;
+    void (*function)(void*), *argument;
+
+    if( job_scheduler == NULL )
+        error_handler("execute_job");
 
     job = pop_queue(&job_scheduler->queue);
     pthread_mutex_unlock(&job_scheduler->mutex);
@@ -108,6 +118,9 @@ void execute_job(struct job_scheduler *job_scheduler) {
 // the new threads start execution by invoking this function
 void *thread_function(void *job_scheduler_argument) {
     struct job_scheduler *job_scheduler = job_scheduler_argument;
+
+    if( job_scheduler == NULL )
+        error_handler("thread_function");
 
     while( true ) {
         pthread_mutex_lock(&job_scheduler->mutex);
