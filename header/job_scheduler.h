@@ -10,9 +10,11 @@ struct job_scheduler{
     bool stop;
     bool pause;
     pthread_t *thread_pool;
-    pthread_mutex_t mutex;
-    pthread_cond_t empty;
-    pthread_cond_t not_empty;
+    pthread_mutex_t queue_mutex;
+    pthread_cond_t queue_empty;
+    pthread_cond_t queue_not_empty;
+    pthread_mutex_t pause_mutex;
+    pthread_cond_t resume;
     struct queue *queue;
 };
 
@@ -25,5 +27,8 @@ void stop_job_scheduler(struct job_scheduler *);
 void schedule_job_scheduler(struct job_scheduler *,void (*function)(void*), void *, int *);
 void execute_job(struct job_scheduler *);
 void *thread_function(void *);
+void hold_threads();
+void pause_job_scheduler(struct job_scheduler *);
+void resume_job_scheduler(struct job_scheduler *);
 
 #endif

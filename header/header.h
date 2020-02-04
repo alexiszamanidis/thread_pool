@@ -7,6 +7,8 @@
 #include <errno.h>
 #include <stdbool.h>
 #include <pthread.h>
+#include <signal.h>
+#include <unistd.h>
 
 #define error_handler(message)              \
     do {                                    \
