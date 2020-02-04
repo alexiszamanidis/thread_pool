@@ -27,7 +27,7 @@ void stop_job_scheduler(struct job_scheduler *);
 void schedule_job_scheduler(struct job_scheduler *,void (*function)(void*), void *, int *);
 void execute_job(struct job_scheduler *);
 void *thread_function(void *);
-void hold_threads();
+void hold_threads(const int , void *);
 void pause_job_scheduler(struct job_scheduler *);
 void resume_job_scheduler(struct job_scheduler *);
 

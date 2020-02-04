@@ -122,15 +122,11 @@ void execute_job(struct job_scheduler *job_scheduler) {
 // the new threads start execution by invoking this function
 void *thread_function(void *job_scheduler_argument) {
     struct job_scheduler *job_scheduler = job_scheduler_argument;
-    struct sigaction signal_action = {0};
 
     if( job_scheduler == NULL )
         error_handler("thread_function");
-
-    signal_action.sa_flags = 0;
-    signal_action.sa_handler = hold_threads;
-    if( sigaction(SIGUSR1, &signal_action, NULL) == -1 )
-        error_handler("thread_function: sigaction failed");
+    signal(SIGUSR1, (void (*))hold_threads);
+    hold_threads(SIGUSR2, job_scheduler);                       // fake signal
 
     while( true ) {
         pthread_mutex_lock(&job_scheduler->queue_mutex);
@@ -145,15 +141,19 @@ void *thread_function(void *job_scheduler_argument) {
     }
 }
 
-// pause signal handler, holds threads until they resumed
-void hold_threads() {
-    extern struct job_scheduler *job_scheduler;
+// pause signal handler, holds threads until they get resumed
+void hold_threads(const int signal, void *job_scheduler_argument) {
+    static struct job_scheduler *job_scheduler = NULL;
+    if( job_scheduler == NULL )
+        job_scheduler = job_scheduler_argument;
     if( job_scheduler == NULL )
         error_handler("hold_threads");
-    pthread_mutex_lock(&job_scheduler->pause_mutex);
-    while( job_scheduler->pause == true )
-        pthread_cond_wait(&job_scheduler->resume,&job_scheduler->pause_mutex);
-    pthread_mutex_unlock(&job_scheduler->pause_mutex);
+    if( signal == SIGUSR1 ) {
+        pthread_mutex_lock(&job_scheduler->pause_mutex);
+        while( job_scheduler->pause == true )
+            pthread_cond_wait(&job_scheduler->resume,&job_scheduler->pause_mutex);
+        pthread_mutex_unlock(&job_scheduler->pause_mutex);
+    }
 }
 
 // sends a signal to all threads in thread pool and they fell asleep util they get resumed
