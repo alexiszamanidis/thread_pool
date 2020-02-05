@@ -10,10 +10,13 @@
 #include <signal.h>
 #include <unistd.h>
 
-#define error_handler(message)              \
-    do {                                    \
-        perror(message);                    \
-        exit(FAILURE);                      \
+#define error_handler(expression, message)                                  \
+    do {                                                                    \
+        if( (expression) == true ) {                                        \
+            fprintf(stderr, "%s:%u: %s: `" #expression "' %s.\n",           \
+                    __FILE__, __LINE__, __func__,message);                  \
+            exit(FAILURE);                                                  \
+        }                                                                   \
     } while (0)
 
 #define time_spent(time,begin,end)                                          \

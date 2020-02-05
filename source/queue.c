@@ -3,8 +3,7 @@
 // initializes the job with a function and argument
 struct job *initialize_job(void (*function)(void*), void *argument, int *barrier) {
     struct job *new_job = (struct job *)malloc(sizeof(struct job));
-    if( new_job == NULL )
-        error_handler("initialize_job: malloc failed");
+    error_handler(new_job == NULL,"initialize_job: malloc failed");
 
     (*barrier)++;
     new_job->function = function;
@@ -18,8 +17,7 @@ struct job *initialize_job(void (*function)(void*), void *argument, int *barrier
 // initializes the queue
 struct queue *initialize_queue() {
     struct queue *new_queue = (struct queue *)malloc(sizeof(struct queue));
-    if( new_queue == NULL )
-        error_handler("initialize_queue: malloc failed");
+    error_handler(new_queue == NULL,"malloc failed");
 
     new_queue->head = NULL;
     new_queue->tail = NULL;
@@ -30,8 +28,7 @@ struct queue *initialize_queue() {
 
 // pushes a job in the queue
 void push_queue(struct queue **queue, void (*function)(void*), void *argument, int *barrier) {
-    if( queue == NULL )
-        error_handler("push_queue");
+    error_handler(queue == NULL,"queue is NULL");
 
     struct job *new_job = initialize_job(function,argument,barrier);
 
@@ -50,8 +47,7 @@ void push_queue(struct queue **queue, void (*function)(void*), void *argument, i
 
 // pops a job from the queue
 struct job *pop_queue(struct queue **queue){
-    if( queue == NULL )
-        error_handler("pop_queue");
+    error_handler(queue == NULL,"queue is NULL");
 
     struct job *temp_job = (*queue)->head;
     // if the queue is empty, then there is not data to be removed

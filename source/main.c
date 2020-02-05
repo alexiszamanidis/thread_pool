@@ -28,6 +28,7 @@ int main(void) {
 
     for( int i = 0 ; i < 10 ; i ++) {
         struct test *test = (struct test *)malloc(sizeof(struct test));
+        error_handler(test == NULL,"malloc failed");
         test->x = i;
         test->y = i;
         schedule_job_scheduler(job_scheduler,(void*)test_function,test,&barrier);
