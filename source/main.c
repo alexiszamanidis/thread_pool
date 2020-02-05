@@ -2,8 +2,6 @@
 #include "../header/queue.h"
 #include "../header/job_scheduler.h"
 
-struct job_scheduler *job_scheduler = NULL;
-
 struct test {
     int x;
     int y;
@@ -22,7 +20,7 @@ int main(void) {
     struct timespec begin, end;
     double time;
     int barrier = 0;
-    job_scheduler = initialize_job_scheduler(NUMBER_OF_THREADS);
+    struct job_scheduler *job_scheduler = initialize_job_scheduler(NUMBER_OF_THREADS);
 
     clock_gettime(CLOCK_MONOTONIC, &begin);
 
@@ -39,7 +37,7 @@ int main(void) {
     sleep(5);
     resume_job_scheduler(job_scheduler);
 
-    dynamic_barrier_job_scheduler(job_scheduler,&barrier);
+    barrier_job_scheduler(job_scheduler);
 
     clock_gettime(CLOCK_MONOTONIC, &end);
     time_spent(time,begin,end);
