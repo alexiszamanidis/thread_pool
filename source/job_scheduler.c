@@ -15,6 +15,7 @@ struct job_scheduler *initialize_job_scheduler(int number_of_threads) {
     pthread_mutex_init(&new_job_scheduler->queue_mutex, NULL);
     pthread_cond_init(&new_job_scheduler->queue_empty, NULL);
     pthread_cond_init(&new_job_scheduler->queue_not_empty, NULL);
+    pthread_cond_init(&new_job_scheduler->barrier, NULL);
     pthread_mutex_init(&new_job_scheduler->pause_mutex, NULL);
     pthread_cond_init(&new_job_scheduler->resume, NULL);
     new_job_scheduler->queue = initialize_queue();
@@ -26,9 +27,11 @@ struct job_scheduler *initialize_job_scheduler(int number_of_threads) {
 // creates all the threads in thread pool
 void create_threads_job_scheduler(struct job_scheduler *job_scheduler) {
     error_handler(job_scheduler == NULL,"job scheduler is NULL");
-    for( int i = 0 ; i < job_scheduler->number_of_threads ; i++ )
-        error_handler(pthread_create(&(job_scheduler->thread_pool[i]),0,thread_function,(void *) job_scheduler) != 0,
-                                                                "pthread_create failed");
+    int return_value;
+    for( int i = 0 ; i < job_scheduler->number_of_threads ; i++ ) {
+        return_value = pthread_create(&(job_scheduler->thread_pool[i]),0,thread_function,(void *) job_scheduler);
+        error_handler(return_value != 0,"pthread_create failed");
+    }
 }
 
 // waits until executed all jobs in the queue
@@ -40,14 +43,19 @@ void barrier_job_scheduler(struct job_scheduler *job_scheduler) {
     pthread_mutex_unlock(&job_scheduler->queue_mutex);
 }
 
-// waits until executed all jobs from a specific barrier in the queue
+// executes jobs and waits until executed all jobs from a specific barrier in the queue
 void dynamic_barrier_job_scheduler(struct job_scheduler *job_scheduler, int *barrier) {
     error_handler(job_scheduler == NULL,"job scheduler is NULL");
     while( (*barrier) != 0 ) {
         pthread_mutex_lock(&job_scheduler->queue_mutex);
         if( job_scheduler->queue->length != 0 )
             execute_job(job_scheduler);
-        else
+        else if( (job_scheduler->queue->length == 0) && ((*barrier) != 0) ) {
+            while( (job_scheduler->queue->length == 0) && ((*barrier) != 0) )
+                pthread_cond_wait(&job_scheduler->barrier,&job_scheduler->queue_mutex);
+            pthread_mutex_unlock(&job_scheduler->queue_mutex);
+        }
+        else if( (job_scheduler->queue->length == 0) && ((*barrier) == 0) )
             pthread_mutex_unlock(&job_scheduler->queue_mutex);
     }
 }
@@ -61,6 +69,7 @@ void free_job_scheduler(struct job_scheduler *job_scheduler) {
     pthread_mutex_destroy(&job_scheduler->queue_mutex);
     pthread_cond_destroy(&job_scheduler->queue_empty);
     pthread_cond_destroy(&job_scheduler->queue_not_empty);
+    pthread_cond_destroy(&job_scheduler->barrier);
     pthread_mutex_destroy(&job_scheduler->pause_mutex);
     pthread_cond_destroy(&job_scheduler->resume);
     free_queue(&job_scheduler->queue);
@@ -83,6 +92,7 @@ void schedule_job_scheduler(struct job_scheduler *job_scheduler, void (*function
     push_queue(&job_scheduler->queue, function, argument, barrier);
     job_scheduler->jobs++;
     pthread_cond_signal(&job_scheduler->queue_not_empty);
+    pthread_cond_signal(&job_scheduler->barrier);
     pthread_mutex_unlock(&job_scheduler->queue_mutex);
 }
 
@@ -102,6 +112,9 @@ void execute_job(struct job_scheduler *job_scheduler) {
     function(argument);
 
     pthread_mutex_lock(&job_scheduler->queue_mutex);
+    (*job->barrier)--;
+    if( (*job->barrier) == 0 )
+        pthread_cond_signal(&job_scheduler->barrier);
     job_scheduler->jobs--;
     if( job_scheduler->jobs == 0 )
         pthread_cond_signal(&job_scheduler->queue_empty);

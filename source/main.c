@@ -34,10 +34,10 @@ int main(void) {
     }
 
     pause_job_scheduler(job_scheduler);
-    sleep(5);
+    sleep(1);
     resume_job_scheduler(job_scheduler);
 
-    barrier_job_scheduler(job_scheduler);
+    dynamic_barrier_job_scheduler(job_scheduler,&barrier);
 
     clock_gettime(CLOCK_MONOTONIC, &end);
     time_spent(time,begin,end);

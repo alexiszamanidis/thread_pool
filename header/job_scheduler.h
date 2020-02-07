@@ -13,6 +13,7 @@ struct job_scheduler{
     pthread_mutex_t queue_mutex;
     pthread_cond_t queue_empty;
     pthread_cond_t queue_not_empty;
+    pthread_cond_t barrier;
     pthread_mutex_t pause_mutex;
     pthread_cond_t resume;
     struct queue *queue;
