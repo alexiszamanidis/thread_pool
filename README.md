@@ -41,7 +41,7 @@ Job scheduler is a structure that manages the thread pool and the queue. Job sch
 ### Installing && Updating
 
 ```
-    $ git clone https://github.com/ZamanidisAlexios/thread_pool.git
+    $ git clone https://github.com/alexiszamanidis/thread_pool.git
     $ git pull
 ```
 
