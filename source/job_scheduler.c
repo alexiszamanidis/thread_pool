@@ -5,6 +5,7 @@ struct job_scheduler *initialize_job_scheduler(int number_of_threads) {
     error_handler(number_of_threads < 1,"number of threads is less than 0");
 
     struct job_scheduler *new_job_scheduler = (struct job_scheduler *)malloc(sizeof(struct job_scheduler));
+    error_handler(new_job_scheduler == NULL,"malloc failed");
     new_job_scheduler->thread_pool = malloc(sizeof(pthread_t)*number_of_threads);
     error_handler(new_job_scheduler->thread_pool == NULL,"malloc failed");
 
@@ -100,6 +101,7 @@ void schedule_job_scheduler(struct job_scheduler *job_scheduler, void (*function
 void execute_job(struct job_scheduler *job_scheduler) {
     struct job *job = NULL;
     void (*function)(void*), *argument;
+    int *barrier;
 
     error_handler(job_scheduler == NULL,"job scheduler is NULL");
 
@@ -112,13 +114,13 @@ void execute_job(struct job_scheduler *job_scheduler) {
     function(argument);
 
     pthread_mutex_lock(&job_scheduler->queue_mutex);
-    (*job->barrier)--;
-    if( (*job->barrier) == 0 )
-        pthread_cond_signal(&job_scheduler->barrier);
+    barrier = job->barrier;
+    free_job(&job);
     job_scheduler->jobs--;
     if( job_scheduler->jobs == 0 )
         pthread_cond_signal(&job_scheduler->queue_empty);
-    free_job(&job);
+    if( (*barrier) == 0 )
+        pthread_cond_signal(&job_scheduler->barrier);
     pthread_mutex_unlock(&job_scheduler->queue_mutex);
 }
 
