@@ -3,7 +3,7 @@
 // initializes the job with a function and argument
 struct job *initialize_job(void (*function)(void*), void *argument, int *barrier) {
     struct job *new_job = (struct job *)malloc(sizeof(struct job));
-    error_handler(new_job == NULL,"initialize_job: malloc failed");
+    error_handler(new_job == NULL,"malloc failed");
 
     (*barrier)++;
     new_job->function = function;

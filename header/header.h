@@ -19,7 +19,7 @@
 #define error_handler(expression, message)                                  \
     do {                                                                    \
         if( (expression) == true ) {                                        \
-            fprintf(stderr, "%s:%u: %s: `" #expression "' %s.\n",           \
+            fprintf(stderr, "%s:%u: %s: '" #expression "' %s.\n",           \
                     __FILE__, __LINE__, __func__,message);                  \
             exit(FAILURE);                                                  \
         }                                                                   \

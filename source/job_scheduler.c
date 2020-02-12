@@ -2,7 +2,7 @@
 
 // initializes the job scheduler with the number of open threads
 struct job_scheduler *initialize_job_scheduler(int number_of_threads) {
-    error_handler(number_of_threads < 1,"number of threads is less than 0");
+    error_handler(number_of_threads < 1,"number of threads is less than 1");
 
     struct job_scheduler *new_job_scheduler = (struct job_scheduler *)malloc(sizeof(struct job_scheduler));
     error_handler(new_job_scheduler == NULL,"malloc failed");
@@ -47,17 +47,19 @@ void barrier_job_scheduler(struct job_scheduler *job_scheduler) {
 // executes jobs and waits until executed all jobs from a specific barrier in the queue
 void dynamic_barrier_job_scheduler(struct job_scheduler *job_scheduler, int *barrier) {
     error_handler(job_scheduler == NULL,"job scheduler is NULL");
-    while( (*barrier) != 0 ) {
+    while( true ) {
         error_handler(pthread_mutex_lock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_lock failed");
-        if( job_scheduler->queue->length != 0 )
+        if( (job_scheduler->queue->length != 0) && ((*barrier) != 0) )
             execute_job(job_scheduler);
         else if( (job_scheduler->queue->length == 0) && ((*barrier) != 0) ) {
             while( (job_scheduler->queue->length == 0) && ((*barrier) != 0) )
                 pthread_cond_wait(&job_scheduler->barrier,&job_scheduler->queue_mutex);
             error_handler(pthread_mutex_unlock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_unlock failed");
         }
-        else if( (job_scheduler->queue->length == 0) && ((*barrier) == 0) )
+        else if( (job_scheduler->queue->length == 0) && ((*barrier) == 0) ) {
             error_handler(pthread_mutex_unlock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_unlock failed");
+            break;
+        }
     }
 }
 
@@ -138,7 +140,7 @@ void *thread_function(void *job_scheduler_argument) {
         while( (job_scheduler->queue->length == 0) && (job_scheduler->stop == false) )
             pthread_cond_wait(&job_scheduler->queue_not_empty,&job_scheduler->queue_mutex);
         if( job_scheduler->stop == true ) {
-            pthread_mutex_unlock(&job_scheduler->queue_mutex);
+            error_handler(pthread_mutex_unlock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_unlock failed");
             pthread_exit(0);
         }
         else
