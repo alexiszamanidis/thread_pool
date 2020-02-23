@@ -71,7 +71,7 @@ struct job *pop_queue(struct queue **queue){
 void free_queue(struct queue **queue) {
     struct job *temp_job = NULL;
 
-    if( queue == NULL )
+    if( *queue == NULL )
         return;
 
     while((*queue)->head) {
@@ -84,7 +84,7 @@ void free_queue(struct queue **queue) {
 
 // frees a job and decreases the barrier
 void free_job(struct job **job) {
-    if( job == NULL )
+    if( *job == NULL )
         return;
     (*(*job)->barrier)--;
     if( (*job)->argument != NULL )
