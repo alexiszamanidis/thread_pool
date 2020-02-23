@@ -35,7 +35,11 @@
 *.i*86
 *.x86_64
 *.hex
-thread_pool
+global_variable
+jobs_add_jobs
+multiple_jobs
+pause_resume
+simple_job
 
 # Debug files
 *.dSYM/
