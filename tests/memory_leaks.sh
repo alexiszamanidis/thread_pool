@@ -1,24 +1,24 @@
 #! /bin/bash
 
-reset='\033[0m'             #reset
-                            #colors
-red='\033[0;31m'            #red
-green='\033[0;32m'          #green
+reset='\033[0m'             # reset
+                            # colors
+red='\033[0;31m'            # red
+green='\033[0;32m'          # green
 
 # compile
 make 2>&1 > /dev/null
 
 function memory_leaks {
-    #get the nubmer of arguments
+    # get the nubmer of arguments
     number_of_arguments=$#
-    #check the number of arguments
+    # check the number of arguments
     if [[ $number_of_arguments -ne "1" ]]
     then
         echo -e "${red}Wrong number of arguments: './memory_leak.sh executable' ${reset}"
         return
     fi
 
-    #get executable
+    # get executable
     executable=$1
 
     output=$(valgrind --leak-check=full --track-origins=yes ./"$executable" 2>&1 > /dev/null)

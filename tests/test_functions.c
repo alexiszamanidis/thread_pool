@@ -1,4 +1,4 @@
-#include "../header/test.h"
+#include "../header/test_functions.h"
 #include "../header/job_scheduler.h"
 
 void argument_job(void *argument) {
@@ -15,7 +15,7 @@ void jobs_add_jobs(void *argument) {
     struct job_scheduler *job_scheduler = jobs_add_jobs_argument->job_scheduler;
     int barrier = 0;
 
-    for( int i = 0 ; i < 100 ; i ++) {
+    for( int i = 0 ; i < 100 ; i ++ ) {
         struct test *test = (struct test *)malloc(sizeof(struct test));
         error_handler(test == NULL,"malloc failed");
         *test = (struct test){ .x = i, .y = i};

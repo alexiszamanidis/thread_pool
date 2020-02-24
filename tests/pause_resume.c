@@ -1,7 +1,7 @@
 #include "../header/header.h"
 #include "../header/queue.h"
 #include "../header/job_scheduler.h"
-#include "../header/test.h"
+#include "../header/test_functions.h"
 
 int main(void) {
     struct timespec begin, end;
@@ -13,7 +13,7 @@ int main(void) {
 
     pause_job_scheduler(job_scheduler);
 
-    for( int i = 0 ; i < 100 ; i ++) {
+    for( int i = 0 ; i < 100 ; i ++ ) {
         struct test *test = (struct test *)malloc(sizeof(struct test));
         error_handler(test == NULL,"malloc failed");
         *test = (struct test){ .x = i, .y = i};
