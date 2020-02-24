@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -g -Wall
 RMFLAGS = -rf
-EXECS = simple_job multiple_jobs pause_resume global_variable jobs_add_jobs
+EXECS = simple_job multiple_jobs pause_resume global_variable jobs_add_jobs dynamic_barrier
 OBJS = test.o queue.o job_scheduler.o
 
 all: $(EXECS) remove_objs usage
@@ -21,6 +21,9 @@ global_variable: $(OBJS) global_variable.c
 jobs_add_jobs: $(OBJS) jobs_add_jobs.c
 	$(CC) $(CFLAGS) $(OBJS) jobs_add_jobs.c -o jobs_add_jobs -lpthread
 
+dynamic_barrier: $(OBJS) dynamic_barrier.c
+	$(CC) $(CFLAGS) $(OBJS) dynamic_barrier.c -o dynamic_barrier -lpthread
+
 remove_objs:
 	rm -rf $(OBJS)
 
@@ -34,7 +37,7 @@ job_scheduler.o: ../source/job_scheduler.c
 	$(CC) $(CFLAGS) -c ../source/job_scheduler.c
 
 usage:
-	@echo 'Usage of thread_pool: valgrind ./thread_pool'
+	@echo 'Usage: valgrind ./simple_job || ./multiple_jobs || ./pause_resume || ./global_variable || ./jobs_add_jobs || ./dynamic_barrier'
 
 clean:
 	rm $(RMFLAGS) $(EXECS) $(OBJS)

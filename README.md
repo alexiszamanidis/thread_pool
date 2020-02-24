@@ -50,6 +50,7 @@ Job scheduler is a structure that manages the thread pool and the queue. Job sch
 ```
     $ cd tests
     $ make
-    $ valgrind ./simple_job || ./multiple_jobs || ./pause_resume || ./global_variable || ./jobs_add_jobs
+    $ valgrind ./simple_job || ./multiple_jobs || ./pause_resume || ./global_variable
+                            || ./jobs_add_jobs || ./dynamic_barrier
 ```
 

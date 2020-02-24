@@ -88,6 +88,6 @@ void free_job(struct job **job) {
         return;
     (*(*job)->barrier)--;
     if( (*job)->argument != NULL )
-        free((*job)->argument);
+        free_pointer(&((*job)->argument));
     free_pointer(job);
 }
