@@ -79,7 +79,7 @@ void free_queue(struct queue **queue) {
         free((*queue)->head);
         (*queue)->head = temp_job;
     }
-    free(*queue);
+    free_pointer(queue);
 }
 
 // frees a job and decreases the barrier
@@ -89,5 +89,5 @@ void free_job(struct job **job) {
     (*(*job)->barrier)--;
     if( (*job)->argument != NULL )
         free((*job)->argument);
-    free(*job);
+    free_pointer(job);
 }

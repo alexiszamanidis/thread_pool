@@ -25,6 +25,14 @@
         }                                                                   \
     } while (0)
 
+#define free_pointer(pointer)                                               \
+    do {                                                                    \
+        if( *pointer != NULL ) {                                            \
+            free(*pointer);                                                 \
+            *pointer = NULL;                                                \
+        }                                                                   \
+    } while (0)
+
 #define time_spent(time,begin,end)                                          \
     do {                                                                    \
         time = (end.tv_sec - begin.tv_sec);                                 \

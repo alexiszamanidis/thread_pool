@@ -68,7 +68,7 @@ void free_job_scheduler(struct job_scheduler *job_scheduler) {
     if( job_scheduler == NULL )
         return;
     if( job_scheduler->thread_pool != NULL )
-        free(job_scheduler->thread_pool);
+        free_pointer(&(job_scheduler->thread_pool));
     pthread_mutex_destroy(&job_scheduler->queue_mutex);
     pthread_cond_destroy(&job_scheduler->queue_empty);
     pthread_cond_destroy(&job_scheduler->queue_not_empty);
@@ -76,7 +76,7 @@ void free_job_scheduler(struct job_scheduler *job_scheduler) {
     pthread_mutex_destroy(&job_scheduler->pause_mutex);
     pthread_cond_destroy(&job_scheduler->resume);
     free_queue(&job_scheduler->queue);
-    free(job_scheduler);
+    free_pointer(&job_scheduler);
 }
 
 // waits until all threads finish their job and after that close all threads
