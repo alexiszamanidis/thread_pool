@@ -16,7 +16,7 @@ void jobs_add_jobs(void *argument) {
     int barrier = 0;
 
     for( int i = 0 ; i < 100 ; i ++ ) {
-        struct test *test = (struct test *)malloc(sizeof(struct test));
+        struct test *test = my_malloc(struct test,1);
         error_handler(test == NULL,"malloc failed");
         *test = (struct test){ .x = i, .y = i};
         schedule_job_scheduler(job_scheduler,(void*)argument_job,test,&barrier);

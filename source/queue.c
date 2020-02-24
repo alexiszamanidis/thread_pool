@@ -2,7 +2,7 @@
 
 // initializes the job with a function and argument
 struct job *initialize_job(void (*function)(void*), void *argument, int *barrier) {
-    struct job *new_job = (struct job *)malloc(sizeof(struct job));
+    struct job *new_job = my_malloc(struct job,1);
     error_handler(new_job == NULL,"malloc failed");
 
     (*barrier)++;
@@ -16,7 +16,7 @@ struct job *initialize_job(void (*function)(void*), void *argument, int *barrier
 
 // initializes the queue
 struct queue *initialize_queue() {
-    struct queue *new_queue = (struct queue *)malloc(sizeof(struct queue));
+    struct queue *new_queue = my_malloc(struct queue,1);
     error_handler(new_queue == NULL,"malloc failed");
 
     new_queue->head = NULL;

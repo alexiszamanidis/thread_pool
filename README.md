@@ -20,7 +20,7 @@ Queue is a linear structure which follows a particular order in which the operat
 
 ## Job scheduler
 
-Job scheduler is a structure that manages the thread pool and the queue. Job scheduler's basic entity is Job. A Job is a routine, which we we want to be executed by a thread, most likely parallel to some other. Αny job can be defined as work and assigned to the Job scheduler. Τhe scheduler basically accepts jobs and assigns them to threads.
+Job scheduler is a structure that manages the thread pool and the queue. Job scheduler's basic entity is Job. A Job is a routine, which we want to be executed by a thread, most likely parallel to some other. Any job can be defined as work and assigned to the Job scheduler. The scheduler basically accepts jobs and assigns them to threads.
 
 ```c
     // Job scheduler functions

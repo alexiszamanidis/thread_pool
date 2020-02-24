@@ -4,9 +4,9 @@
 struct job_scheduler *initialize_job_scheduler(int number_of_threads) {
     error_handler(number_of_threads < 1,"number of threads is less than 1");
 
-    struct job_scheduler *new_job_scheduler = (struct job_scheduler *)malloc(sizeof(struct job_scheduler));
+    struct job_scheduler *new_job_scheduler = my_malloc(struct job_scheduler,1);
     error_handler(new_job_scheduler == NULL,"malloc failed");
-    new_job_scheduler->thread_pool = malloc(sizeof(pthread_t)*number_of_threads);
+    new_job_scheduler->thread_pool = my_malloc(pthread_t,1);
     error_handler(new_job_scheduler->thread_pool == NULL,"malloc failed");
 
     new_job_scheduler->number_of_threads = number_of_threads;

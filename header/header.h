@@ -25,6 +25,15 @@
         }                                                                   \
     } while (0)
 
+#define my_malloc(type, number_of_elements)                                 \
+    ( (type*) malloc( (number_of_elements) * sizeof(type)) )
+
+#define my_calloc(type, number_of_elements)                                 \
+    ( (type*) calloc( number_of_elements, sizeof(type)) )
+
+#define my_realloc(pointer, type, number_of_elements)                       \
+    ( (type *) realloc( pointer , (number_of_elements) * sizeof(type)) )
+
 #define free_pointer(pointer)                                               \
     do {                                                                    \
         if( *pointer != NULL ) {                                            \
