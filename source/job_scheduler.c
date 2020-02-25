@@ -3,7 +3,7 @@
 // initializes the job scheduler with the number of open threads
 struct job_scheduler *initialize_job_scheduler(int number_of_threads) {
     error_handler(number_of_threads < 1,"number of threads is less than 1");
-
+    int return_value;
     struct job_scheduler *new_job_scheduler = my_malloc(struct job_scheduler,1);
     error_handler(new_job_scheduler == NULL,"malloc failed");
     new_job_scheduler->thread_pool = my_malloc(pthread_t,1);
@@ -20,19 +20,12 @@ struct job_scheduler *initialize_job_scheduler(int number_of_threads) {
     error_handler(pthread_mutex_init(&new_job_scheduler->pause_mutex, NULL) != 0,"pthread_mutex_init failed");
     error_handler(pthread_cond_init(&new_job_scheduler->resume, NULL) != 0,"pthread_cond_init failed");
     new_job_scheduler->queue = initialize_queue();
-    create_threads_job_scheduler(new_job_scheduler);
-
-    return new_job_scheduler;
-}
-
-// creates all the threads in thread pool
-void create_threads_job_scheduler(struct job_scheduler *job_scheduler) {
-    error_handler(job_scheduler == NULL,"job scheduler is NULL");
-    int return_value;
-    for( int i = 0 ; i < job_scheduler->number_of_threads ; i++ ) {
-        return_value = pthread_create(&(job_scheduler->thread_pool[i]),0,thread_function,(void *) job_scheduler);
+    for( int i = 0 ; i < new_job_scheduler->number_of_threads ; i++ ) {
+        return_value = pthread_create(&(new_job_scheduler->thread_pool[i]),0,thread_function,(void *) new_job_scheduler);
         error_handler(return_value != 0,"pthread_create failed");
     }
+
+    return new_job_scheduler;
 }
 
 // waits until executed all jobs in the queue

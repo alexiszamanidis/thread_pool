@@ -1,5 +1,5 @@
-#ifndef test_functions_H
-#define test_functions_H
+#ifndef test_functions_h_
+#define test_functions_h_
 
 #include "./header.h"
 

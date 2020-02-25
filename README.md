@@ -25,7 +25,6 @@ Job scheduler is a structure that manages the thread pool and the queue. Job sch
 ```c
     // Job scheduler functions
     struct job_scheduler *initialize_job_scheduler(int );
-    void create_threads_job_scheduler(struct job_scheduler *);
     void barrier_job_scheduler(struct job_scheduler *);
     void dynamic_barrier_job_scheduler(struct job_scheduler *, int *);
     void free_job_scheduler(struct job_scheduler *);

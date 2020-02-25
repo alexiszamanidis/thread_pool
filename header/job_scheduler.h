@@ -1,5 +1,5 @@
-#ifndef job_scheduler_H
-#define job_scheduler_H
+#ifndef job_scheduler_h_
+#define job_scheduler_h_
 
 #include "./header.h"
 #include "./queue.h"

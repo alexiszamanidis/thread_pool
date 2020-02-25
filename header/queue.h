@@ -1,5 +1,5 @@
-#ifndef queue_H
-#define queue_H
+#ifndef queue_h_
+#define queue_h_
 
 #include "./header.h"
 
