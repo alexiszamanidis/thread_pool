@@ -30,7 +30,6 @@ int main(void) {
     time_spent(time,begin,end);
     printf("Execution time = %f\n",time);
 
-    stop_job_scheduler(job_scheduler);
     free_job_scheduler(job_scheduler);
 
     return SUCCESS;

@@ -17,7 +17,6 @@ int main(void) {
 
     dynamic_barrier_job_scheduler(job_scheduler,&barrier);
 
-    stop_job_scheduler(job_scheduler);
     free_job_scheduler(job_scheduler);
 
     return SUCCESS;

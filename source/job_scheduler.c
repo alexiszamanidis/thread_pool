@@ -60,6 +60,9 @@ void dynamic_barrier_job_scheduler(struct job_scheduler *job_scheduler, int *bar
 void free_job_scheduler(struct job_scheduler *job_scheduler) {
     if( job_scheduler == NULL )
         return;
+
+    stop_job_scheduler(job_scheduler);
+
     if( job_scheduler->thread_pool != NULL )
         free_pointer(&(job_scheduler->thread_pool));
     pthread_mutex_destroy(&job_scheduler->queue_mutex);

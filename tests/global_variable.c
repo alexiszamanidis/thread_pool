@@ -23,7 +23,6 @@ int main(void) {
 
     printf("global_variable = %d\n",global_variable);
 
-    stop_job_scheduler(job_scheduler);
     free_job_scheduler(job_scheduler);
 
     return SUCCESS;

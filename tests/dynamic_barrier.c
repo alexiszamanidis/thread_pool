@@ -25,7 +25,6 @@ int main(void) {
 
     resume_job_scheduler(job_scheduler);
 
-    stop_job_scheduler(job_scheduler);
     free_job_scheduler(job_scheduler);
 
     return SUCCESS;
