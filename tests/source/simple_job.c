@@ -1,7 +1,7 @@
-#include "../header/header.h"
-#include "../header/queue.h"
-#include "../header/job_scheduler.h"
-#include "../header/test_functions.h"
+#include "../../header/header.h"
+#include "../../header/queue.h"
+#include "../../header/job_scheduler.h"
+#include "../../header/test_functions.h"
 
 int main(void) {
     int barrier = 0;

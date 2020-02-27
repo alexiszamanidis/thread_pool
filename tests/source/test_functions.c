@@ -1,5 +1,5 @@
-#include "../header/test_functions.h"
-#include "../header/job_scheduler.h"
+#include "../../header/test_functions.h"
+#include "../../header/job_scheduler.h"
 
 void argument_job(void *argument) {
     struct test *test = (struct test *)argument;

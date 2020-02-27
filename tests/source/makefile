@@ -30,11 +30,11 @@ remove_objs:
 test_functions.o: test_functions.c
 	$(CC) $(CFLAGS) -c test_functions.c
 
-queue.o: ../source/queue.c
-	$(CC) $(CFLAGS) -c ../source/queue.c
+queue.o: ../../source/queue.c
+	$(CC) $(CFLAGS) -c ../../source/queue.c
 
-job_scheduler.o: ../source/job_scheduler.c
-	$(CC) $(CFLAGS) -c ../source/job_scheduler.c
+job_scheduler.o: ../../source/job_scheduler.c
+	$(CC) $(CFLAGS) -c ../../source/job_scheduler.c
 
 usage:
 	@echo 'Usage: valgrind ./simple_job || ./multiple_jobs || ./pause_resume || ./global_variable || ./jobs_add_jobs || ./dynamic_barrier'

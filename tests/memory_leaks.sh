@@ -5,16 +5,13 @@ reset='\033[0m'             # reset
 red='\033[0;31m'            # red
 green='\033[0;32m'          # green
 
-# compile
-make 2>&1 > /dev/null
-
 function memory_leaks {
     # get the nubmer of arguments
     number_of_arguments=$#
     # check the number of arguments
     if [[ $number_of_arguments -ne "1" ]]
     then
-        echo -e "${red}Wrong number of arguments: './memory_leak.sh executable' ${reset}"
+        echo -e "${red}memory_leaks: Wrong number of arguments: 'memory_leaks executable' ${reset}"
         return
     fi
 
@@ -33,16 +30,3 @@ function memory_leaks {
         echo -e "${red}${executable}: Allocated $allocs times but freed only $frees${reset}"
     fi
 }
-
-# function calls
-memory_leaks simple_job
-memory_leaks multiple_jobs
-memory_leaks global_variable
-memory_leaks pause_resume
-memory_leaks jobs_add_jobs
-memory_leaks dynamic_barrier
-
-# clean
-make clean 2>&1 > /dev/null
-
-exit 0
