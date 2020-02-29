@@ -2,6 +2,9 @@
 
 // initializes the job with a function and argument
 struct job *initialize_job(void (*function)(void*), void *argument, int *barrier) {
+    if( function == NULL )
+        return NULL;
+
     struct job *new_job = my_malloc(struct job,1);
     error_handler(new_job == NULL,"malloc failed");
 
@@ -27,10 +30,12 @@ struct queue *initialize_queue() {
 }
 
 // pushes a job in the queue
-void push_queue(struct queue **queue, void (*function)(void*), void *argument, int *barrier) {
+bool push_queue(struct queue **queue, void (*function)(void*), void *argument, int *barrier) {
     error_handler(queue == NULL,"queue is NULL");
 
     struct job *new_job = initialize_job(function,argument,barrier);
+    if( new_job == NULL )
+        return false;
 
     // if the queue is empty, fix head and tail
     if( (*queue)->length == 0 ) {
@@ -43,6 +48,8 @@ void push_queue(struct queue **queue, void (*function)(void*), void *argument, i
         (*queue)->tail = new_job;
     }
     (*queue)->length++;
+
+    return true;
 }
 
 // pops a job from the queue

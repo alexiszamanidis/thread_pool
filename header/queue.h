@@ -18,7 +18,7 @@ struct queue{
 
 struct job *initialize_job(void (*function)(void*), void *, int *);
 struct queue *initialize_queue();
-void push_queue(struct queue **, void (*function)(void*), void *, int *);
+bool push_queue(struct queue **, void (*function)(void*), void *, int *);
 struct job *pop_queue(struct queue **);
 void free_queue(struct queue **);
 void free_job(struct job **);

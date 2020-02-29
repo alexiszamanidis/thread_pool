@@ -41,6 +41,7 @@ multiple_jobs
 pause_resume
 simple_job
 dynamic_barrier
+null_function_pointer
 
 # Debug files
 *.dSYM/
