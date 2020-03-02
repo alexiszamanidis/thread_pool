@@ -17,8 +17,8 @@ int main(void) {
         struct test *test = my_malloc(struct test,1);
         error_handler(test == NULL,"malloc failed");
         *test = (struct test){ .x = i, .y = i};
-        schedule_job_scheduler(job_scheduler,(void*)argument_job,test,&barrier);
-        schedule_job_scheduler(job_scheduler,(void*)simple_job,NULL,&barrier);
+        schedule_job_scheduler(job_scheduler,argument_job,test,&barrier);
+        schedule_job_scheduler(job_scheduler,simple_job,NULL,&barrier);
     }
 
     sleep(5);

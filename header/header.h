@@ -42,6 +42,14 @@
         }                                                                   \
     } while (0)
 
+#define my_printf(x) _Generic((x),                                          \
+    int: "%d",                                                              \
+    double: "%f",                                                           \
+    char: "%c",                                                             \
+    char *: "%s")
+#define print(x) printf(#x" = "), printf(my_printf(x), x);
+#define printnl(x) print(x); printf("\n");
+
 #define time_spent(time,begin,end)                                          \
     do {                                                                    \
         time = (end.tv_sec - begin.tv_sec);                                 \

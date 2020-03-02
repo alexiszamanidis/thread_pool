@@ -17,11 +17,11 @@ int main(void) {
     struct job_scheduler *job_scheduler = initialize_job_scheduler(NUMBER_OF_THREADS);
 
     for( int i = 0 ; i < 100 ; i ++ )
-        schedule_job_scheduler(job_scheduler,(void*)increase,NULL,&barrier);
+        schedule_job_scheduler(job_scheduler,increase,NULL,&barrier);
 
     dynamic_barrier_job_scheduler(job_scheduler,&barrier);
 
-    printf("global_variable = %d\n",global_variable);
+    printnl(global_variable);
 
     free_job_scheduler(job_scheduler);
 

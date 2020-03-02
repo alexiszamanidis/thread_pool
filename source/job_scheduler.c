@@ -125,11 +125,11 @@ void execute_job(struct job_scheduler *job_scheduler) {
 
 // the new threads start execution by invoking this function
 void *thread_function(void *job_scheduler_argument) {
-    struct job_scheduler *job_scheduler = job_scheduler_argument;
+    struct job_scheduler *job_scheduler = (struct job_scheduler *)job_scheduler_argument;
 
     error_handler(job_scheduler == NULL,"job scheduler is NULL");
     
-    signal(ORIGINAL_SIGNAL, (void (*))hold_threads);
+    signal(ORIGINAL_SIGNAL, (void (*)(int))hold_threads);
     hold_threads(FAKE_SIGNAL, job_scheduler);
 
     while( true ) {
@@ -149,7 +149,7 @@ void *thread_function(void *job_scheduler_argument) {
 void hold_threads(const int signal, void *job_scheduler_argument) {
     static struct job_scheduler *job_scheduler = NULL;
     if( job_scheduler == NULL )
-        job_scheduler = job_scheduler_argument;
+        job_scheduler = (struct job_scheduler *)job_scheduler_argument;
     error_handler(job_scheduler == NULL,"job scheduler is NULL");
     if( signal == ORIGINAL_SIGNAL ) {
         error_handler(pthread_mutex_lock(&job_scheduler->pause_mutex) != 0,"pthread_mutex_lock failed");

@@ -4,7 +4,7 @@
 #include "./header.h"
 #include "./queue.h"
 
-struct job_scheduler{
+struct job_scheduler {
     int number_of_threads;
     int jobs;
     bool stop;

@@ -3,14 +3,14 @@
 
 #include "./header.h"
 
-struct job{
-    void   (*function)(void* argument);
-    void*  argument;
+struct job {
+    void (*function)(void *argument);
+    void *argument;
     int *barrier;
     struct job *next;
 };
 
-struct queue{	
+struct queue {
     struct job *head;
     struct job *tail;
     int length;
