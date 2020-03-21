@@ -78,8 +78,10 @@ void free_job_scheduler(struct job_scheduler *job_scheduler) {
 // waits until all threads finish their job and after that close all threads
 void stop_job_scheduler(struct job_scheduler *job_scheduler) {
     error_handler(job_scheduler == NULL,"job scheduler is NULL");
+    error_handler(pthread_mutex_lock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_lock failed");
     job_scheduler->stop = true;
     error_handler(pthread_cond_broadcast(&job_scheduler->queue_not_empty) != 0,"pthread_cond_broadcast failed");
+    error_handler(pthread_mutex_unlock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_unlock failed");
     for( int i = 0 ; i < job_scheduler->number_of_threads ; i++ )
         error_handler(pthread_join(job_scheduler->thread_pool[i],0) != 0,"pthread_join failed");
 }
@@ -136,7 +138,7 @@ void *thread_function(void *job_scheduler_argument) {
         error_handler(pthread_mutex_lock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_lock failed");
         while( (job_scheduler->queue->length == 0) && (job_scheduler->stop == false) )
             pthread_cond_wait(&job_scheduler->queue_not_empty,&job_scheduler->queue_mutex);
-        if( job_scheduler->stop == true ) {
+        if( (job_scheduler->queue->length == 0) && (job_scheduler->stop == true) ) {
             error_handler(pthread_mutex_unlock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_unlock failed");
             pthread_exit(0);
         }
