@@ -44,15 +44,22 @@ void dynamic_barrier_job_scheduler(struct job_scheduler *job_scheduler, int *bar
         error_handler(pthread_mutex_lock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_lock failed");
         if( (job_scheduler->queue->length != 0) && ((*barrier) != 0) )
             execute_job(job_scheduler);
+        else if( (*barrier) == 0 ) {
+            error_handler(pthread_mutex_unlock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_unlock failed");
+            break;
+        }
+        #define LOOP
+        #ifdef LOOP
+        else
+            error_handler(pthread_mutex_unlock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_unlock failed");
+        #endif
+        #ifdef CONDITION_VARIABLE
         else if( (job_scheduler->queue->length == 0) && ((*barrier) != 0) ) {
             while( (job_scheduler->queue->length == 0) && ((*barrier) != 0) )
                 pthread_cond_wait(&job_scheduler->barrier,&job_scheduler->queue_mutex);
             error_handler(pthread_mutex_unlock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_unlock failed");
         }
-        else if( (*barrier) == 0 ) {
-            error_handler(pthread_mutex_unlock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_unlock failed");
-            break;
-        }
+        #endif
     }
 }
 
