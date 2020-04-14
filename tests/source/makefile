@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -g -Wall
+CFLAGS = -g -Wall #-DTHREAD_POOL_DEBUG
 TFLAG = -lpthread
 RMFLAGS = -rf
 EXECS = simple_job multiple_jobs pause_resume global_variable jobs_add_jobs dynamic_barrier null_function_pointer

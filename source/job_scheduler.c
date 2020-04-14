@@ -20,6 +20,11 @@ struct job_scheduler *initialize_job_scheduler(int number_of_threads) {
     error_handler(pthread_mutex_init(&new_job_scheduler->pause_mutex, NULL) != 0,"pthread_mutex_init failed");
     error_handler(pthread_cond_init(&new_job_scheduler->resume, NULL) != 0,"pthread_cond_init failed");
     new_job_scheduler->queue = initialize_queue();
+
+#if THREAD_POOL_DEBUG
+    printnl(new_job_scheduler->number_of_threads);
+#endif
+
     for( int i = 0 ; i < new_job_scheduler->number_of_threads ; i++ ) {
         return_value = pthread_create(&(new_job_scheduler->thread_pool[i]),0,thread_function,(void *) new_job_scheduler);
         error_handler(return_value != 0,"pthread_create failed");
@@ -140,6 +145,11 @@ void *thread_function(void *job_scheduler_argument) {
     
     signal(ORIGINAL_SIGNAL, (void (*)(int))hold_threads);
     hold_threads(FAKE_SIGNAL, job_scheduler);
+
+#if THREAD_POOL_DEBUG
+    int thread_id = pthread_self();
+    printnl(thread_id);
+#endif
 
     while( true ) {
         error_handler(pthread_mutex_lock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_lock failed");

@@ -32,4 +32,8 @@ void hold_threads(const int , void *);
 void pause_job_scheduler(struct job_scheduler *);
 void resume_job_scheduler(struct job_scheduler *);
 
+#ifdef THREAD_POOL_DEBUG
+#define THREAD_POOL_DEBUG 1
+#endif
+
 #endif
