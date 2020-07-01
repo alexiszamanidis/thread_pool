@@ -1,5 +1,31 @@
 #include "../header/job_scheduler.h"
 
+// initializes the job with a function and argument
+struct job *initialize_job(void (*function)(void*), void *argument, int *barrier) {
+    if( function == NULL )
+        return NULL;
+
+    struct job *new_job = my_malloc(struct job,1);
+    error_handler(new_job == NULL,"malloc failed");
+
+    (*barrier)++;
+    new_job->function = function;
+    new_job->argument = argument;
+    new_job->barrier = barrier;
+    new_job->next = NULL;
+    
+    return new_job;
+}
+
+// frees a job and decreases the barrier
+void free_job(struct job **job) {
+    if( *job == NULL )
+        return;
+    (*(*job)->barrier)--;
+    if( (*job)->argument != NULL )
+        free_pointer(&((*job)->argument));
+}
+
 // initializes the job scheduler with the number of open threads
 struct job_scheduler *initialize_job_scheduler(int number_of_threads) {
     error_handler(number_of_threads < 1,"number of threads is less than 1");
@@ -100,13 +126,15 @@ void stop_job_scheduler(struct job_scheduler *job_scheduler) {
 
 // adds a job in the queue
 void schedule_job_scheduler(struct job_scheduler *job_scheduler, void (*function)(void*), void *argument, int *barrier) {
+    if( function == NULL )
+        return;
     error_handler(job_scheduler == NULL,"job scheduler is NULL");
     error_handler(pthread_mutex_lock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_lock failed");
-    if( push_queue(&job_scheduler->queue, function, argument, barrier) == true ) {
-        job_scheduler->jobs++;
-        error_handler(pthread_cond_signal(&job_scheduler->queue_not_empty) != 0,"pthread_cond_signal failed");
-        error_handler(pthread_cond_signal(&job_scheduler->barrier) != 0,"pthread_cond_signal failed");
-    }
+    struct job *new_job = initialize_job(function,argument,barrier);
+    push_queue(&job_scheduler->queue, (void*)new_job);
+    job_scheduler->jobs++;
+    error_handler(pthread_cond_signal(&job_scheduler->queue_not_empty) != 0,"pthread_cond_signal failed");
+    error_handler(pthread_cond_signal(&job_scheduler->barrier) != 0,"pthread_cond_signal failed");
     error_handler(pthread_mutex_unlock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_unlock failed");
 }
 
@@ -118,7 +146,8 @@ void execute_job(struct job_scheduler *job_scheduler) {
 
     error_handler(job_scheduler == NULL,"job scheduler is NULL");
 
-    job = pop_queue(&job_scheduler->queue);
+    struct queue_node *queue_node = pop_queue(&job_scheduler->queue);
+    job = queue_node->data;
     error_handler(pthread_mutex_unlock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_unlock failed");
 
     function = job->function;
@@ -129,6 +158,7 @@ void execute_job(struct job_scheduler *job_scheduler) {
     error_handler(pthread_mutex_lock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_lock failed");
     barrier = job->barrier;
     free_job(&job);
+    free_queue_node(&queue_node);
     job_scheduler->jobs--;
     if( job_scheduler->jobs == 0 )
         error_handler(pthread_cond_signal(&job_scheduler->queue_empty) != 0,"pthread_cond_signal failed");

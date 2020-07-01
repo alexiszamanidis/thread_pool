@@ -4,6 +4,16 @@
 #include "./header.h"
 #include "./queue.h"
 
+struct job {
+    void (*function)(void *argument);
+    void *argument;
+    int *barrier;
+    struct job *next;
+};
+
+struct job *initialize_job(void (*function)(void*), void *, int *);
+void free_job(struct job **);
+
 struct job_scheduler {
     int number_of_threads;
     int jobs;

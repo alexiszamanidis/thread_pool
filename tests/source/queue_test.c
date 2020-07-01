@@ -9,24 +9,24 @@ struct coordinates {
 };
 
 int main(void) {
-    struct generic_queue *generic_queue = initialize_generic_queue(sizeof(int));
+    struct queue *queue = initialize_queue();
     
     for(int i = 0 ; i < 5 ; i++) {
         struct coordinates *test_coordinates = malloc(sizeof(struct coordinates));
         test_coordinates->x = i;
         test_coordinates->y = i;
-        push_generic_queue(&generic_queue, (void*)test_coordinates);
+        push_queue(&queue, (void*)test_coordinates);
     }
 
     for(int i = 0 ; i < 5 ; i++) {
-        struct generic_queue_node *generic_queue_node = pop_generic_queue(&generic_queue);
-        struct coordinates *test_coordinates = generic_queue_node->data;
+        struct queue_node *queue_node = pop_queue(&queue);
+        struct coordinates *test_coordinates = queue_node->data;
         printnl(test_coordinates->x);
         printnl(test_coordinates->y);
-        free_generic_queue_node(&generic_queue_node);
+        free_queue_node(&queue_node);
     }
 
-    free_generic_queue(&generic_queue);
+    free_queue(&queue);
 
     return SUCCESS;
 }
