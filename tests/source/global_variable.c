@@ -1,7 +1,7 @@
 #include "../../header/header.h"
 #include "../../header/queue.h"
 #include "../../header/job_scheduler.h"
-#include "../../header/test_functions.h"
+#include "../header/test_functions.h"
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 int global_variable = 0;

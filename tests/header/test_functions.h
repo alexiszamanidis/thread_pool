@@ -1,7 +1,7 @@
 #ifndef test_functions_h_
 #define test_functions_h_
 
-#include "./header.h"
+#include "../../header/header.h"
 
 struct test {
     int x;
