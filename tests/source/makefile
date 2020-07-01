@@ -7,6 +7,10 @@ OBJS = test_functions.o queue.o job_scheduler.o
 
 all: $(EXECS) remove_objs usage
 
+queue_test: $(OBJS) queue_test.c
+	$(CC) $(CFLAGS) $(OBJS) queue_test.c -o queue_test $(TFLAG)
+	rm -rf $(OBJS)
+
 simple_job: $(OBJS) simple_job.c
 	$(CC) $(CFLAGS) $(OBJS) simple_job.c -o simple_job $(TFLAG)
 
