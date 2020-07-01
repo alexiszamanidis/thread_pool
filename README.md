@@ -37,22 +37,19 @@ Job scheduler is a structure that manages the thread pool and the queue. Job sch
     void resume_job_scheduler(struct job_scheduler *);
 ```
 
-### Installing && Updating
-
-```
-    $ git clone https://github.com/alexiszamanidis/thread_pool.git
-    $ git pull
-```
-
 ### Execution instructions
+
+Run all the tests together
 
 ```
     $ cd tests
-    $./run_tests.sh
-           or
-    $ cd tests/source
-    $ make
-    $ valgrind ./simple_job || ./multiple_jobs || ./pause_resume    || ./global_variable
-                            || ./jobs_add_jobs || ./dynamic_barrier || ./null_function_pointer
+    $ ./run_tests.sh
 ```
 
+Οr you can compile and run each executable individually
+
+```
+    $ cd tests/source
+    $ make
+    $ valgrind ./'executable name'
+```
