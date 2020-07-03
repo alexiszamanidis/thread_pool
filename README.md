@@ -4,12 +4,10 @@ A thread pool is a group of threads initially created that waits for jobs and ex
 so that we won't have to pay overhead time for creating them every time. Also, the thread pool keeps the system from becoming overloaded. 
 It allows a limit to the number of threads and tasks are queued and only run when a thread is available.
 
-![thread_pool](https://user-images.githubusercontent.com/48658768/71448039-5d4d6e80-273f-11ea-9017-2e57e1b5971d.png)
-
 ## Queue
 
 Queue is a linear structure which follows a particular order in which the operations are performed. The order is First In First Out (FIFO). 
-It holds the function to call and it's arguments. Βasically, it is used for the temporary storage of jobs.
+It holds the function to call and it's arguments. Basically, it is used for the temporary storage of jobs.
 
 ```c
     // Queue functions
@@ -20,6 +18,8 @@ It holds the function to call and it's arguments. Βasically, it is used for the
     void *pop_tail_queue(struct queue **);
     void free_queue(struct queue **);
 ```
+
+![queue](https://user-images.githubusercontent.com/48658768/86474114-d65efb80-bd4a-11ea-8d47-d27b61c8f9b8.png)
 
 ## Job scheduler
 
@@ -44,6 +44,8 @@ The scheduler basically accepts jobs and assigns them to threads.
     void pause_job_scheduler(struct job_scheduler *);
     void resume_job_scheduler(struct job_scheduler *);
 ```
+
+![thread_pool](https://user-images.githubusercontent.com/48658768/71448039-5d4d6e80-273f-11ea-9017-2e57e1b5971d.png)
 
 ## Unit Testing
 [CUnit](http://cunit.sourceforge.net/) is a lightweight system for writing, administering, and running unit tests in C.  
