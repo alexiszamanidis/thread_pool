@@ -1,5 +1,5 @@
-#ifndef test_functions_h_
-#define test_functions_h_
+#ifndef job_scheduler_test_functions_h_
+#define job_scheduler_test_functions_h_
 
 #include "../../header/header.h"
 

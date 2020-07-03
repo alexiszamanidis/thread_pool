@@ -3,7 +3,7 @@ CFLAGS = -g -Wall #-DTHREAD_POOL_DEBUG
 TFLAG = -lpthread
 RMFLAGS = -rf
 EXECS = queue_test simple_job multiple_jobs pause_resume global_variable jobs_add_jobs dynamic_barrier null_function_pointer
-OBJS = test_functions.o queue.o job_scheduler.o
+OBJS = job_scheduler_test_functions.o queue.o job_scheduler.o
 
 all: $(EXECS) remove_objs usage
 
@@ -34,8 +34,8 @@ null_function_pointer: $(OBJS) null_function_pointer.c
 remove_objs:
 	rm -rf $(OBJS)
 
-test_functions.o: test_functions.c
-	$(CC) $(CFLAGS) -c test_functions.c
+job_scheduler_test_functions.o: job_scheduler_test_functions.c
+	$(CC) $(CFLAGS) -c job_scheduler_test_functions.c
 
 queue.o: ../../source/queue.c
 	$(CC) $(CFLAGS) -c ../../source/queue.c
