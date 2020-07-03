@@ -1,10 +1,23 @@
 #! /bin/bash
 
-# compile
-cd job_scheduler && make 2>&1 > /dev/null
+echo "Queue Tests"
 
+# compile queue tests
+cd queue && make 2>&1 > /dev/null
+# run queue tests
+cd .. && source ./cunit.sh
+cunit queue/main
+
+# queue clean
+cd queue && make clean 2>&1 > /dev/null && cd ..
+
+#####################################################################
+
+echo "Job scheduler Tests"
+# compile job scheduler tests
+cd job_scheduler && make 2>&1 > /dev/null
+# run job scheduler tests
 cd .. && source ./memory_leaks.sh
-# function calls
 memory_leaks job_scheduler/simple_job
 memory_leaks job_scheduler/multiple_jobs
 memory_leaks job_scheduler/global_variable
@@ -13,7 +26,7 @@ memory_leaks job_scheduler/jobs_add_jobs
 memory_leaks job_scheduler/dynamic_barrier
 memory_leaks job_scheduler/null_function_pointer
 
-# clean
-cd source && make clean 2>&1 > /dev/null
+# job scheduler clean
+cd job_scheduler && make clean 2>&1 > /dev/null
 
 exit 0

@@ -2,13 +2,10 @@ CC = gcc
 CFLAGS = -g -Wall #-DTHREAD_POOL_DEBUG
 TFLAG = -lpthread
 RMFLAGS = -rf
-EXECS = queue_test simple_job multiple_jobs pause_resume global_variable jobs_add_jobs dynamic_barrier null_function_pointer
+EXECS = simple_job multiple_jobs pause_resume global_variable jobs_add_jobs dynamic_barrier null_function_pointer
 OBJS = job_scheduler_test_functions.o queue.o job_scheduler.o
 
 all: $(EXECS) remove_objs usage
-
-queue_test: $(OBJS) queue_test.c
-	$(CC) $(CFLAGS) $(OBJS) queue_test.c -o queue_test $(TFLAG)
 
 simple_job: $(OBJS) simple_job.c
 	$(CC) $(CFLAGS) $(OBJS) simple_job.c -o simple_job $(TFLAG)
