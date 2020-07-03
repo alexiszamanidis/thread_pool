@@ -44,7 +44,7 @@ job_scheduler.o: ../../source/job_scheduler.c
 	$(CC) $(CFLAGS) -c ../../source/job_scheduler.c
 
 usage:
-	@echo 'Usage: valgrind ./simple_job || ./multiple_jobs || ./pause_resume || ./global_variable || ./jobs_add_jobs || ./dynamic_barrier || ./null_function_pointer'
+	@echo "Usage: valgrind ./'executable_name'"
 
 clean:
 	rm $(RMFLAGS) $(EXECS) $(OBJS)
