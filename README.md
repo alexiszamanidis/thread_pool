@@ -10,12 +10,12 @@ Queue is a linear structure which follows a particular order in which the operat
 
 ```c
     // Queue functions
-    struct job *initialize_job(void (*function)(void*), void *, int *);
     struct queue *initialize_queue();
-    void push_queue(struct queue **, void (*function)(void*), void *, int *);
-    struct job *pop_queue(struct queue **);
+    void push_head_queue(struct queue **, void *);
+    void push_tail_queue(struct queue **, void *);
+    void *pop_head_queue(struct queue **);
+    void *pop_tail_queue(struct queue **);
     void free_queue(struct queue **);
-    void free_job(struct job **);
 ```
 
 ## Job scheduler
@@ -24,7 +24,10 @@ Job scheduler is a structure that manages the thread pool and the queue. Job sch
 
 ```c
     // Job scheduler functions
+    struct job *initialize_job(void (*function)(void*), void *, int *);
+    void free_job(struct job **);
     struct job_scheduler *initialize_job_scheduler(int );
+    void create_threads_job_scheduler(struct job_scheduler *);
     void barrier_job_scheduler(struct job_scheduler *);
     void dynamic_barrier_job_scheduler(struct job_scheduler *, int *);
     void free_job_scheduler(struct job_scheduler *);
@@ -49,7 +52,7 @@ Run all the tests together
 Οr you can compile and run each executable individually
 
 ```
-    $ cd tests/source
+    $ cd tests/job_scheduler
     $ make
     $ valgrind ./'executable name'
 ```
