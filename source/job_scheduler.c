@@ -24,6 +24,7 @@ void free_job(struct job **job) {
     (*(*job)->barrier)--;
     if( (*job)->argument != NULL )
         free_pointer(&((*job)->argument));
+    free_pointer(job);
 }
 
 // initializes the job scheduler with the number of open threads
@@ -131,7 +132,7 @@ void schedule_job_scheduler(struct job_scheduler *job_scheduler, void (*function
     error_handler(job_scheduler == NULL,"job scheduler is NULL");
     error_handler(pthread_mutex_lock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_lock failed");
     struct job *new_job = initialize_job(function,argument,barrier);
-    push_queue(&job_scheduler->queue, (void*)new_job);
+    push_tail_queue(&job_scheduler->queue, (void*)new_job);
     job_scheduler->jobs++;
     error_handler(pthread_cond_signal(&job_scheduler->queue_not_empty) != 0,"pthread_cond_signal failed");
     error_handler(pthread_cond_signal(&job_scheduler->barrier) != 0,"pthread_cond_signal failed");
@@ -146,8 +147,7 @@ void execute_job(struct job_scheduler *job_scheduler) {
 
     error_handler(job_scheduler == NULL,"job scheduler is NULL");
 
-    struct queue_node *queue_node = pop_queue(&job_scheduler->queue);
-    job = queue_node->data;
+    job = pop_head_queue(&job_scheduler->queue);
     error_handler(pthread_mutex_unlock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_unlock failed");
 
     function = job->function;
@@ -158,7 +158,6 @@ void execute_job(struct job_scheduler *job_scheduler) {
     error_handler(pthread_mutex_lock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_lock failed");
     barrier = job->barrier;
     free_job(&job);
-    free_queue_node(&queue_node);
     job_scheduler->jobs--;
     if( job_scheduler->jobs == 0 )
         error_handler(pthread_cond_signal(&job_scheduler->queue_empty) != 0,"pthread_cond_signal failed");

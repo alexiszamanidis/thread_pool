@@ -6,6 +6,7 @@
 struct queue_node {
     void *data;
     struct queue_node *next;
+    struct queue_node *previous;
 };
 
 struct queue {
@@ -15,9 +16,10 @@ struct queue {
 };
 
 struct queue *initialize_queue();
-void push_queue(struct queue **, void *);
-void *pop_queue(struct queue **);
+void push_head_queue(struct queue **, void *);
+void push_tail_queue(struct queue **, void *);
+void *pop_head_queue(struct queue **);
+void *pop_tail_queue(struct queue **);
 void free_queue(struct queue **);
-void free_queue_node(struct queue_node **);
 
 #endif
