@@ -1,5 +1,6 @@
 #include "../../header/header.h"
 #include "../../header/queue.h"
+#include "../header/cunit.h"
 #include "../header/queue_test_functions.h"
 
 int main(void) {

@@ -3,7 +3,7 @@
 
 #include "../../header/header.h"
 
-struct test {
+struct coordinates {
     int x;
     int y;
 };

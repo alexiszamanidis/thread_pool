@@ -54,5 +54,5 @@ Run all the tests together
 ```
     $ cd tests/job_scheduler
     $ make
-    $ valgrind ./'executable name'
+    $ valgrind ./'executable_name'
 ```

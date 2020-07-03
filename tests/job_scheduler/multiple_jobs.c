@@ -8,10 +8,10 @@ int main(void) {
     struct job_scheduler *job_scheduler = initialize_job_scheduler(NUMBER_OF_THREADS);
 
     for( int i = 0 ; i < 100 ; i ++ ) {
-        struct test *test = my_malloc(struct test,1);
-        error_handler(test == NULL,"malloc failed");
-        *test = (struct test){ .x = i, .y = i};
-        schedule_job_scheduler(job_scheduler,argument_job,test,&barrier);
+        struct coordinates *coordinates = my_malloc(struct coordinates,1);
+        error_handler(coordinates == NULL,"malloc failed");
+        *coordinates = (struct coordinates){ .x = i, .y = i};
+        schedule_job_scheduler(job_scheduler,argument_job,coordinates,&barrier);
         schedule_job_scheduler(job_scheduler,simple_job,NULL,&barrier);
     }
 

@@ -1,13 +1,7 @@
 #include "../../header/header.h"
 #include "../../header/queue.h"
+#include "../header/cunit.h"
 #include "../header/queue_test_functions.h"
-
-void add_test(CU_pSuite pSuite, const char* strName, CU_TestFunc pTestFunc) {
-    if (NULL == CU_add_test(pSuite, strName, pTestFunc)) {
-        CU_cleanup_registry();
-        exit(FAILURE);
-    }
-}
 
 void initialize_queue_test() {
     struct queue *queue = initialize_queue();

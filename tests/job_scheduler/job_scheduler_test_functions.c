@@ -2,8 +2,8 @@
 #include "../../header/job_scheduler.h"
 
 void argument_job(void *argument) {
-    struct test *test = (struct test *)argument;
-    printf("x=%d, y=%d\n", test->x, test->y);
+    struct coordinates *coordinates = (struct coordinates *)argument;
+    printf("x=%d, y=%d\n", coordinates->x, coordinates->y);
 }
 
 void simple_job(void *argument) {
@@ -16,10 +16,10 @@ void jobs_add_jobs(void *argument) {
     int barrier = 0;
 
     for( int i = 0 ; i < 100 ; i ++ ) {
-        struct test *test = my_malloc(struct test,1);
-        error_handler(test == NULL,"malloc failed");
-        *test = (struct test){ .x = i, .y = i};
-        schedule_job_scheduler(job_scheduler,argument_job,test,&barrier);
+        struct coordinates *coordinates = my_malloc(struct coordinates,1);
+        error_handler(coordinates == NULL,"malloc failed");
+        *coordinates = (struct coordinates){ .x = i, .y = i};
+        schedule_job_scheduler(job_scheduler,argument_job,coordinates,&barrier);
         schedule_job_scheduler(job_scheduler,simple_job,NULL,&barrier);
     }
 
