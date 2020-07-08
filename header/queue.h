@@ -12,7 +12,7 @@ struct queue_node {
 struct queue {
     struct queue_node *head;
     struct queue_node *tail;
-    int length;
+    unsigned int length;
 };
 
 struct queue *initialize_queue();
@@ -20,6 +20,7 @@ void push_head_queue(struct queue **, void *);
 void push_tail_queue(struct queue **, void *);
 void *pop_head_queue(struct queue **);
 void *pop_tail_queue(struct queue **);
+unsigned int get_length_queue(struct queue *);
 void free_queue(struct queue **);
 
 #endif

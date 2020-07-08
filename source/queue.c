@@ -130,6 +130,12 @@ void *pop_tail_queue(struct queue **queue) {
     return data;
 }
 
+// returns the lengths of the queue
+unsigned int get_length_queue(struct queue *queue) {
+    error_handler(queue == NULL,"queue is NULL");
+    return queue->length;
+}
+
 // frees all resources that are allocated by queue
 void free_queue(struct queue **queue) {
     struct queue_node *temp_queue_node = NULL;

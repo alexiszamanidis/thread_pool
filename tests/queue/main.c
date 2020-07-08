@@ -23,6 +23,7 @@ int main(void) {
     add_test(pSuite, "push_tail_queue_test", push_tail_queue_test);
     add_test(pSuite, "pop_head_queue_test", pop_head_queue_test);
     add_test(pSuite, "pop_tail_queue_test", pop_tail_queue_test);
+    add_test(pSuite, "get_length_queue_test", get_length_queue_test);
 
     // run all tests using the CUnit Basic interface
     CU_basic_set_mode(CU_BRM_VERBOSE);

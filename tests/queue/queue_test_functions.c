@@ -108,3 +108,31 @@ void pop_tail_queue_test() {
 
     free_queue(&queue);
 }
+
+void get_length_queue_test() {
+    struct queue *queue = initialize_queue();
+    
+    for(int i = 0 ; i < SIZE ; i++) {
+        struct coordinates *test_coordinates = malloc(sizeof(struct coordinates));
+        test_coordinates->x = i;
+        test_coordinates->y = i;
+        push_tail_queue(&queue, (void*)test_coordinates);
+    }
+    CU_ASSERT( get_length_queue(queue) == 5 );
+
+    // queue[(1,1),(2,2),(3,3),(4,4)]
+    struct coordinates *test_coordinates = pop_head_queue(&queue);
+    free_pointer(&test_coordinates);
+    CU_ASSERT( get_length_queue(queue) == 4 );
+
+    // queue[(1,1),(2,2),(3,3),(4,4),(0,0),(1,1),(2,2),(3,3),(4,4)]
+    for(int i = 0 ; i < SIZE ; i++) {
+        struct coordinates *test_coordinates = malloc(sizeof(struct coordinates));
+        test_coordinates->x = i;
+        test_coordinates->y = i;
+        push_tail_queue(&queue, (void*)test_coordinates);
+    }
+    CU_ASSERT( get_length_queue(queue) == 9 );
+
+    free_queue(&queue);
+}
