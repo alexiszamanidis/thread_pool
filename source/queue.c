@@ -15,6 +15,7 @@ struct queue *initialize_queue() {
 // pushes a node from the head in the queue
 void push_head_queue(struct queue **queue, void *data) {
     error_handler(queue == NULL,"queue is NULL");
+    error_handler(data == NULL,"data is NULL");
 
     // allocate queue node
     struct queue_node *new_queue_node = my_malloc(struct queue_node,1);
@@ -42,6 +43,7 @@ void push_head_queue(struct queue **queue, void *data) {
 // pushes a node from the tail in the queue
 void push_tail_queue(struct queue **queue, void *data) {
     error_handler(queue == NULL,"queue is NULL");
+    error_handler(data == NULL,"data is NULL");
 
     // allocate queue node
     struct queue_node *new_queue_node = my_malloc(struct queue_node,1);
