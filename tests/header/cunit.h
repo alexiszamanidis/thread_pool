@@ -7,6 +7,11 @@
 
 #define FAILURE -1
 
-void add_test(CU_pSuite , const char* , CU_TestFunc );
+static inline void add_test(CU_pSuite pSuite, const char* strName, CU_TestFunc pTestFunc) {
+    if ( CU_add_test(pSuite, strName, pTestFunc) == NULL ) {
+        CU_cleanup_registry();
+        exit(FAILURE);
+    }
+}
 
 #endif

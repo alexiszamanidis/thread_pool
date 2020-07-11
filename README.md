@@ -9,7 +9,7 @@ It allows a limit to the number of threads and tasks are queued and only run whe
 Queue is a linear structure which follows a particular order in which the operations are performed. The order is First In First Out (FIFO). 
 It holds the function to call and it's arguments. Basically, it is used for the temporary storage of jobs.
 
-When I started the project I implemented a simple Queue, but I develop it to a **Generic Double Linked Queue** (Probably useful for other projects).
+When I started the project I implemented a simple Queue, but I developed it to a **Generic Double Linked Queue** (Probably useful for other projects).
 
 A **good approach when someone wants to use the Queue** is to create his own allocation, initialization and free functions for his struct. For example, 
 my functions for job struct in job_scheduler.c file: a)initialize_job(allocates and initializes a job struct), b) free_job(frees a job struct).
@@ -74,7 +74,7 @@ to test my **Queue**. As for the **Job Scheduler**, I implemented some examples 
 Run all the tests **together**
 
 ```
-    $ cd tests
+    $ cd tests/scripts
     $ ./run_tests.sh
 ```
 
