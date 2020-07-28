@@ -85,3 +85,5 @@ Run all the tests **together**
     $ make
     $ valgrind ./'executable_name'
 ```
+
+You can check out my [**Query Executor**](https://github.com/alexiszamanidis/query_executor) Project that uses this Thread Pool to parallelize it's tasks.

@@ -28,14 +28,14 @@ void push_head_queue(struct queue **queue, void *data) {
     // if the queue is empty, fix head and tail
     if( (*queue)->length == 0 ) {
         new_queue_node->next = NULL;
-        (*queue)->head = (void *)new_queue_node;
-        (*queue)->tail = (void *)new_queue_node;
+        (*queue)->head = (struct queue_node *)new_queue_node;
+        (*queue)->tail = (struct queue_node *)new_queue_node;
     }
     // otherwise fix only tail
     else {
         new_queue_node->next = (*queue)->head;
-        (*queue)->head->previous = (void *)new_queue_node;
-        (*queue)->head = (void *)new_queue_node;
+        (*queue)->head->previous = (struct queue_node *)new_queue_node;
+        (*queue)->head = (struct queue_node *)new_queue_node;
     }
     (*queue)->length++;
 }
@@ -56,14 +56,14 @@ void push_tail_queue(struct queue **queue, void *data) {
     // if the queue is empty, fix head and tail
     if( (*queue)->length == 0 ) {
         new_queue_node->previous = NULL;
-        (*queue)->head = (void *)new_queue_node;
-        (*queue)->tail = (void *)new_queue_node;
+        (*queue)->head = (struct queue_node *)new_queue_node;
+        (*queue)->tail = (struct queue_node *)new_queue_node;
     }
     // otherwise fix only tail
     else {
         new_queue_node->previous = (*queue)->tail;
-        (*queue)->tail->next = (void *)new_queue_node;
-        (*queue)->tail = (void *)new_queue_node;
+        (*queue)->tail->next = (struct queue_node *)new_queue_node;
+        (*queue)->tail = (struct queue_node *)new_queue_node;
     }
     (*queue)->length++;
 }
@@ -144,10 +144,10 @@ void free_queue(struct queue **queue) {
         return;
 
     while((*queue)->head) {
-        temp_queue_node = (void *)(*queue)->head->next;
+        temp_queue_node = (struct queue_node *)(*queue)->head->next;
         free_pointer(&(*queue)->head->data);
         free_pointer(&(*queue)->head);
-        (*queue)->head = (void *)temp_queue_node;
+        (*queue)->head = (struct queue_node *)temp_queue_node;
     }
     free_pointer(queue);
 }

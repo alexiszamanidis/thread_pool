@@ -147,7 +147,7 @@ void execute_job(struct job_scheduler *job_scheduler) {
 
     error_handler(job_scheduler == NULL,"job scheduler is NULL");
 
-    job = pop_head_queue(&job_scheduler->queue);
+    job = (struct job *)pop_head_queue(&job_scheduler->queue);
     error_handler(pthread_mutex_unlock(&job_scheduler->queue_mutex) != 0,"pthread_mutex_unlock failed");
 
     function = job->function;
